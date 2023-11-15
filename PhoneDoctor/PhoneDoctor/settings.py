@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'core',
     'django_use_email_as_username.apps.DjangoUseEmailAsUsernameConfig',
     'custom_user.apps.CustomUserConfig',
+    'widget_tweaks',
 ]
 
 AUTH_USER_MODEL = 'custom_user.User'

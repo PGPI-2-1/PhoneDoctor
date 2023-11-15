@@ -1,30 +1,31 @@
 <!-- templates/base.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Website{% endblock %}</title>
-    <!-- Agrega aquí tus estilos CSS, scripts, o cualquier otro recurso común -->
+    <title>{% block title %}My Website{% endblock %} | PhoneDoctor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <!-- Agrega aquí tus estilos CSS adicionales si es necesario -->
 </head>
-<body>
-    <!-- Barra de navegación común -->
-    <nav>
-        <ul>
-            <li><a href="/">Inicio</a></li>
-            <li><a href="{% url 'register' %}">Registro</a></li>
-            <!-- Puedes agregar más elementos de navegación según sea necesario -->
-        </ul>
-    </nav>
+<body class="bg-gray-100">
 
-    <!-- Contenido específico de la página -->
-    <div id="content">
-        {% block content %}{% endblock %}
+    <div class="container mx-auto py-8">
+        <header class="bg-blue-500 text-white p-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">PhoneDoctor</h1>
+        </header>
+
+        <div class="bg-white p-6 rounded shadow-md">
+            {% block content %}
+            {% endblock %}
+        </div>
     </div>
 
     <!-- Pie de página común -->
-    <footer>
+    <footer class="bg-blue-500 text-white p-4 text-center">
         <!-- Agrega aquí información del pie de página, enlaces, etc. -->
+        &copy; 2023 My Website
     </footer>
+
 </body>
 </html>
