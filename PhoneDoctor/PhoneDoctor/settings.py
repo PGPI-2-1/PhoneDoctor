@@ -55,6 +55,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'PhoneDoctor.urls'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 TEMPLATES = [
     {

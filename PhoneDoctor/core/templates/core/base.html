@@ -11,6 +11,13 @@
     </head>
 
     <body>
+        {% if user.is_authenticated %}
+            <p>Bienvenido, {{ user.email }}!</p>
+            <p><a href="{% url 'logout' %}">Salir</a></p> 
+            <!-- Puedes mostrar más información del usuario aquí -->
+        {% else %}
+            <a href="{% url 'login' %}">Iniciar sesión</a>
+        {% endif %}
         <div class="px-6 py-6">
             {% block content %}
             {% endblock %}

@@ -1,0 +1,30 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Website{% endblock %}</title>
+    <!-- Agrega aquí tus estilos CSS, scripts, o cualquier otro recurso común -->
+</head>
+<body>
+    <!-- Barra de navegación común -->
+    <nav>
+        <ul>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="{% url 'register' %}">Registro</a></li>
+            <!-- Puedes agregar más elementos de navegación según sea necesario -->
+        </ul>
+    </nav>
+
+    <!-- Contenido específico de la página -->
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Pie de página común -->
+    <footer>
+        <!-- Agrega aquí información del pie de página, enlaces, etc. -->
+    </footer>
+</body>
+</html>
