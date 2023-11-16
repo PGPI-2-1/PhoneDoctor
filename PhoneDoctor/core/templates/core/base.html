@@ -11,15 +11,22 @@
     <div class="container mx-auto py-8">
         <header class="bg-blue-500 text-white p-4 flex justify-between items-center">
             <h1 class="text-2xl font-bold">PhoneDoctor</h1>
+            {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                    <div class="flex items-left">
+                        <a href="{% url 'new' %}" class="bg-white px-4 py-2 rounded text-black font-bold">Nuevo Producto</a>
+                    </div>
+                {% endif %}
+            {% endif %}
 
             <nav class="flex items-center">
                 {% if user.is_authenticated %}
                 <div class="inline-block">
                     <p class="text-white-500">Bienvenido, {{ user.email }}!</p>
-                    <p><a href="{% url 'logout' %}" class="bg-red-500 px-4 py-2 rounded text-white font-bold">Salir</a></p>
+                    <p><a href="{% url 'logout' %}" class="bg-white px-4 py-2 rounded text-black font-bold">Salir</a></p>
                 </div>
                 {% else %}
-                    <a href="{% url 'login' %}" class="bg-red-500 px-4 py-2 rounded text-white font-bold">Iniciar sesión</a>
+                    <a href="{% url 'login' %}" class="bg-white px-4 py-2 rounded text-black font-bold">Iniciar sesión</a>
                 {% endif %}
             </nav>
         </header>
