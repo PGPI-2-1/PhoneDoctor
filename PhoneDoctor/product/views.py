@@ -6,7 +6,7 @@ from .models import Product
 
 
 # Create your views here.
-from .forms import NewProductForm
+from .forms import NewProductForm, EditProductForm
 
 @login_required
 def new(request):
@@ -38,3 +38,27 @@ def delete(request, pk):
     product.delete()
 
     return redirect('/')
+
+@login_required
+def edit(request, pk):
+    product=get_object_or_404(Product, pk=pk)
+
+    if not request.user.is_staff:
+        template = loader.get_template('product/403.html')
+        return HttpResponseForbidden(template.render({}, request))
+
+    if request.method == 'POST':
+        form = EditProductForm(request.POST, request.FILES, instance=product)
+
+        if form.is_valid():
+            form.save()
+
+            return redirect('/')
+            #return redirect('product:detail', pk=product.id)
+    else:
+        form = EditProductForm(instance=product)
+
+    return render(request, 'product/form.html', {
+        'form': form,
+        'title': 'Modificar Producto',
+    })
