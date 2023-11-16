@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <header class="bg-azul-personalizado text-white py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="left-section">
+                <a href="{% url 'index' %}">
+                    <img src="{% static 'core/images/logo.jpeg' %}" alt="Logo" class="h-24 ml-2">
+                </a>
+            </div>
+
+            <!-- Center Section -->
+            <div class="center-section flex items-center">
+                <!-- Input de búsqueda más ancho, sin bordes, con fondo transparente y texto blanco -->
+                <form action="" method="get" class="flex items-center">
+                    <input type="text" name="q" placeholder="Buscar productos" class="px-4 py-1 bg-transparent text-white focus:outline-none border-none">
+                    <!-- Icono de lupa de Font Awesome -->
+                    <button type="submit" class="bg-transparent text-white px-4 py-1 focus:outline-none">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right Section -->
+            <div class="right-section flex items-center mr-8">
+                {% if user.is_authenticated %}
+                    <p class="mr-4">Bienvenido, {{ user.username }} | <a href="{% url 'logout' %}" class="text-white">Cerrar sesión</a></p>
+                {% else %}
+                    <!-- Mueve el texto "Iniciar sesión" a la izquierda y agrega un margen derecho -->
+                    <a href="{% url 'login' %}" class="mr-4 ml-8 text-white">Iniciar sesión</a>
+                    <!-- Barra vertical como separador opcional -->
+                    <span class="text-white">|</span>
+                    <!-- Carrito de compras con un icono más grande -->
+                    <a href="#" class="flex items-center ml-4">
+                        <i class="fa fa-shopping-cart text-white fa-3x"></i>
+                        <!-- Agregar un contador o indicador visual para el carrito si es necesario -->
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+</body>
+</html>
