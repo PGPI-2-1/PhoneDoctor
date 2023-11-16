@@ -2,8 +2,6 @@
 __pycache__/
 *.pyc
 
-# Archivos del entorno virtual
-venv/
 
 # Archivos de registro y carpetas
 log/
