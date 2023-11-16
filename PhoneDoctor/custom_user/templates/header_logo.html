@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <header class="bg-azul-personalizado text-white py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="left-section">
+                <a href="{% url 'index' %}">
+                    <img src="{% static 'core/images/logo.jpeg' %}" alt="Logo" class="h-24 ml-2">
+                </a>
+            </div>
+    </header>
+</body>
+</html>

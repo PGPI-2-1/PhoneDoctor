@@ -6,36 +6,23 @@
     <title>{% block title %} {% endblock %} | PhoneDoctor</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
+
+{% include 'core/header.html' %}
+
 <body class="bg-gray-100">
 
     <div class="container mx-auto py-8">
-        <header class="bg-blue-500 text-white p-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold">PhoneDoctor</h1>
-            {% if user.is_authenticated %}
-                {% if user.is_staff %}
-                    <div class="flex items-left">
-                        <a href="{% url 'new' %}" class="bg-white px-4 py-2 rounded text-black font-bold">Nuevo Producto</a>
-                    </div>
-                {% endif %}
-            {% endif %}
-
-            <nav class="flex items-center">
-                {% if user.is_authenticated %}
-                <div class="inline-block">
-                    <p class="text-white-500">Bienvenido, {{ user.email }}!</p>
-                    <p><a href="{% url 'logout' %}" class="bg-white px-4 py-2 rounded text-black font-bold">Salir</a></p>
-                </div>
-                {% else %}
-                    <a href="{% url 'login' %}" class="bg-white px-4 py-2 rounded text-black font-bold">Iniciar sesión</a>
-                {% endif %}
-            </nav>
-        </header>
 
         <div class="bg-white p-6 rounded shadow-md">
             {% block content %}
             {% endblock %}
         </div>
     </div>
+    <!-- Pie de página común -->
+    <footer class="bg-azul-personalizado text-white p-4 text-center">
+        <!-- Agrega aquí información del pie de página, enlaces, etc. -->
+        &copy; 2023 My Website
+    </footer>
 
 </body>
 </html>
