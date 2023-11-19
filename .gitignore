@@ -1,0 +1,8 @@
+# Archivos de bytecode de Python
+__pycache__/
+*.pyc
+
+
+# Archivos de registro y carpetas
+log/
+*.log
