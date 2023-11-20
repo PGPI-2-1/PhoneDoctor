@@ -35,23 +35,34 @@
                         </div>
                     {% endif %}
                     <p class="mr-4">Bienvenido, {{ user.email }} | <a href="{% url 'logout' %}" class="text-white">Cerrar sesión</a></p>
-                    <a href="#" class="flex items-center ml-4">
-                        <i class="fa fa-shopping-cart text-white fa-3x"></i>
-                        <!-- Agregar un contador o indicador visual para el carrito si es necesario -->
-                    </a>
+                    </div>
                     {% else %}
                     <!-- Mueve el texto "Iniciar sesión" a la izquierda y agrega un margen derecho -->
                     <a href="{% url 'login' %}" class="mr-4 ml-8 text-white">Iniciar sesión</a>
-                    <!-- Barra vertical como separador opcional -->
-                    <span class="text-white">|</span>
-                    <!-- Carrito de compras con un icono más grande -->
-                    <a href="#" class="flex items-center ml-4">
-                        <i class="fa fa-shopping-cart text-white fa-3x"></i>
-                        <!-- Agregar un contador o indicador visual para el carrito si es necesario -->
-                    </a>
                 {% endif %}
             </div>
         </div>
     </header>
 </body>
 </html>
+
+<style>
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+</style>

@@ -2,40 +2,58 @@
 
 {% block title %} Welcome {% endblock %}
 
-
 {% block content %}
-    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
-        <h2 class="mb-12 text-2xl text-center">Productos</h2>
+    <div class="grid grid-cols-3 gap-6">
 
-        <div class="grid grid-cols-3 gap-3">
-            {% for product in products %}
-                <div>
-                    <a href="#">
+        <!-- Bloque de productos -->
+        <div class="col-span-2">
+            <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+                <h2 class="mb-12 text-2xl text-center">Productos</h2>
+
+                <div class="grid grid-cols-3 gap-3">
+                    {% for product in products %}
                         <div>
-                            <img src="{{ product.image.url }}" class="rounded-t-xl">
-                        </div>
+                            <a href="#">
+                                <div>
+                                    <img src="{{ product.image.url }}" class="rounded-t-xl">
+                                </div>
 
+                                <div class="p-6 bg-white rounded-b-xl">
+                                    <h2 class="text-2xl">{{ product.name }}</h2>
+                                    <p class="text-gray-500">Precio: {{ product.price }}</p>
+                                </div>
+                            </a>
+                            <a href="{% url 'add_to_cart' product.id %}">Añadir al carrito</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Nuevo bloque a la derecha de productos -->
+        <div class="col-span-1">
+            <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+                <h2 class="mb-12 text-2xl text-center">Nuevo Bloque</h2>
+                <!-- Contenido del nuevo bloque -->
+            </div>
+        </div>
+        
+        <!-- Bloque de categorías (abajo de productos) -->
+        <div class="col-span-3">
+            <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+                <h2 class="mb-12 text-2xl text-center">Categorías</h2>
+
+                <div class="grid grid-cols-3 gap-3">
+                    {% for category in categories %}
+                    <a href="#">
                         <div class="p-6 bg-white rounded-b-xl">
-                            <h2 class="text-2xl">{{ product.name }}</h2>
-                            <p class="text-gray-500">Precio: {{ product.price }}</p>
+                            <h2 class="text-2xl">{{ category.name }}</h2>
+                            <p class="text-gray-500">{{ category.products.count }} productos</p>
                         </div>
                     </a>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            </div>
         </div>
     </div>
-
-    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
-        <h2 class="mb-12 text-2xl text-center">Categorías</h2>
-
-        <div class="grid grid-cols-3 gap-3">
-            {% for category in categories %}
-            <a href="#">
-                <div class="p-6 bg-white rounded-b-xl">
-                    <h2 class="text-2xl">{{ category.name }}</h2>
-                    <p class="text-gray-500">{{ category.products.count }} productos</p>
-                </div>
-            </a>
-            {% endfor %}
-        </div>
 {% endblock %}
