@@ -3,27 +3,27 @@ from product.models import Product
 from .models import CartItem
 
 
+
 def add_to_cart(request, product_id):
-    quantity = int(request.POST.get('quantity', 1))  # Obtener la cantidad del formulario, con 1 como valor predeterminado
+
+    cantidad_ingresada_str = request.GET.get('cantidad', 0)
+    cantidad_ingresada = int(cantidad_ingresada_str)
     product = Product.objects.get(pk=product_id)
 
-    cart_item, created = CartItem.objects.get_or_create(user=request.user, product=product)
-
-    if not created:
-        cart_item.quantity += quantity
-        cart_item.save()
-
+    if request.user.is_authenticated:
+        cart_item_tuple= CartItem.objects.get_or_create(user=request.user, product=product)
+        cart_item = cart_item_tuple[0]
     else:
-        cart_item.quantity = quantity
+        cart_item_tuple= CartItem.objects.get_or_create(user=None, product=product)
+        cart_item = cart_item_tuple[0]
+
+    if cantidad_ingresada == 0:
+        cart_item.delete()
+    else:
+        cart_item.quantity = cantidad_ingresada
         cart_item.save()
     
     return redirect("/")
-
-
-def getCartItems(request):
-    shoppingCarts = CartItem.objects.filter(user_id=request.user.id)
-
-    return render(request, 'core/base.html', context)
 
 
 

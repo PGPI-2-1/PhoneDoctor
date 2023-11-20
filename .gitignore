@@ -8,3 +8,4 @@ db.sqlite3
 # Archivos de registro y carpetas
 log/
 *.log
+PhoneDoctor/db.sqlite3
