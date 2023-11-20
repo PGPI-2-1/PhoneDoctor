@@ -1,0 +1,13 @@
+[
+    {
+        "model": "custom_user.User",
+        "fields": 
+        {
+          "email": "admin@admin.com",
+          "password": "pbkdf2_sha256$600000$ShBdsfn43U1wJUSNmJAvHO$sKdNbXaEA5QJKYFa7giD/jFUUzrX0kmdymemEWmWFlg=",
+          "is_superuser": true,
+          "is_staff": true
+        }
+    
+    }
+]
