@@ -2,10 +2,39 @@
 
 {% block title %} Welcome {% endblock %}
 
-
 {% block content %}
     <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
         <h2 class="mb-12 text-2xl text-center">Productos</h2>
+
+        <form method="get" action="{% url 'index' %}" class="flex items-center justify-center mt-4">
+            <div class="mr-4">
+            <label for="category" class="mr-2 text-gray-700">Categoría:</label>
+            <select name="category" id="category" class="p-2 border border-gray-300 rounded">
+                <option value="" {% if not category_filter %}selected{% endif %}>Todas</option>
+                {% for category in categories %}
+                    <option value="{{ category.name }}" {% if category.name == category_filter %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            </div>
+
+            <div class="mr-4">
+            <label for="brand" class="mr-2 text-gray-700">Marca:</label>
+            <select name="brand" id="brand" class="p-2 border border-gray-300 rounded">
+                <option value="" {% if not brand_filter %}selected{% endif %}>Todas</option>
+                {% for brand in brands %}
+                    <option value="{{ brand.name }}" {% if brand.name == brand_filter %}selected{% endif %}>
+                        {{ brand.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Filtrar</button>
+        </form>
+
+        <div class="mt-10"></div>
 
         <div class="grid grid-cols-3 gap-3">
             {% for product in products %}

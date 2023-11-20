@@ -1,11 +1,25 @@
 from django.shortcuts import render
-from product.models import Category, Product
-# Create your views here.
+from product.models import Category, Product, Brand
 
 def index(request):
-    products = Product.objects.all()
     categories = Category.objects.all()
+    brands = Brand.objects.all()
+    products = Product.objects.all()
+
+    category = request.GET.get('category', None)
+    brand = request.GET.get('brand', None)
+
+    if category and brand:
+        products = Product.objects.filter(brand__name=brand, category__name=category)
+    elif category:
+        products = Product.objects.filter(category__name=category)
+    elif brand:
+        products = Product.objects.filter(brand__name=brand)
+
     return render(request, 'core/index.html', {
-        'categories':categories,
-        'products':products,
+        'categories': categories,
+        'brands': brands,
+        'products': products,
+        'category_filter': category,
+        'brand_filter': brand,
     })
