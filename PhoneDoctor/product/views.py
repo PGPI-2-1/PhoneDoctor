@@ -23,7 +23,6 @@ def new(request):
             item.save()
 
             return redirect('/')
-            #return redirect('product:detail', pk=product.id)
     else:
         form = NewProductForm()
 

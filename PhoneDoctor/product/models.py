@@ -3,7 +3,7 @@ from custom_user.models import User
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     class Meta:
         ordering = ('name',)
@@ -13,7 +13,7 @@ class Category(models.Model):
         return self.name
     
 class Brand(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     class Meta:
         ordering = ('name',)
@@ -24,8 +24,8 @@ class Brand(models.Model):
     
 class Product(models.Model):
 
-    brand = models.ForeignKey(Brand, related_name='products', on_delete=models.CASCADE, unique=True)
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE, unique=True)
+    brand = models.ForeignKey(Brand, related_name='products', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description=models.TextField(blank=True,null=True)
     price=models.FloatField()
