@@ -6,3 +6,5 @@ __pycache__/
 # Archivos de registro y carpetas
 log/
 *.log
+
+PhoneDoctor/db.sqlite3
