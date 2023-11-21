@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .forms import RegistrationForm, MyAuthForm
 from django.contrib.auth.views import LoginView
+# Importar modelo Ventas
 
 class RegistrationView(View):
     template_name = 'register.html'
@@ -35,3 +36,7 @@ class MyLoginView(LoginView):
         # Recupera mensajes de error del contexto de la sesión
         context['error_messages'] = self.request.session.pop('error_messages', None)
         return context
+
+def dashboard(request):
+    # sales = Sale.objects.all()
+    return render(request, 'dashboard.html', {'sales': 'sales'})    
