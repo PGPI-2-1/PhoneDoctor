@@ -1,77 +1,109 @@
 {% extends 'core/base.html' %}
 
 {% block title %} Welcome {% endblock %}
+
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-xxxxxx" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-xxxxxx" crossorigin="anonymous" />
 </head>
 {% block content %}
-    <div class="grid grid-cols-3 gap-6">
+<div class="grid grid-cols-3 gap-6">
 
-        <!-- Bloque de productos -->
-        <div class="col-span-2">
-            <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
-                <h2 class="mb-8 text-2xl text-center">Productos</h2>
+    <!-- Bloque de productos -->
+    <div class="col-span-2">
+        <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+            <h2 class="mb-8 text-2xl text-center">Productos</h2>
 
-                <div class="grid grid-cols-3 gap-3">
-                    {% for product in products %}
-                        <div>
-                            <a href="#">
-                                <div>
-                                    <img src="{{ product.image.url }}" class="rounded-t-xl">
-                                </div>
-
-                                <div class="p-6 bg-white rounded-b-xl">
-                                    <h2 class="text-2xl">{{ product.name }}</h2>
-                                    <p class="text-gray-500">Precio: {{ product.price }}</p>
-                                </div>
-                            </a>
-                            <form id="miFormulario" action="{% url 'add_to_cart' product.id %}" method="GET">
-                                <input type="number" name="cantidad" id="cantidad" min="0" required>
-                                <button type="submit" class="bg-transparent text-black px-4 py-1 focus:outline-none">
-                                    <i class="fa fa-plus-circle"></i>
-                                </button>
-                            </form>
-                        </div>
-                    {% endfor %}
+            <form method="get" action="{% url 'index' %}" class="flex items-center justify-center mt-4">
+                <div class="mr-4">
+                    <label for="category" class="mr-2 text-gray-700">Categoría:</label>
+                    <select name="category" id="category" class="p-2 border border-gray-300 rounded">
+                        <option value="" {% if not category_filter %}selected{% endif %}>Todas</option>
+                        {% for category in categories %}
+                        <option value="{{ category.name }}" {% if category.name == category_filter %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
                 </div>
-            </div>
-        </div>
 
-        <!-- Nuevo bloque a la derecha de productos -->
-        <div class="col-span-1">
-            <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
-                <h2 class="mb-8 text-2xl text-center">Carrito de la Compra
-                </h2>
-                <div class="felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
-                    {% for cart_item in cart_items %}
-                        <div class="flex justify-between mb-2">
-                            <p>{{ cart_item.quantity }}  x  {{ cart_item.product.name }}</p>
-                            <p>{{ cart_item.quantity }}  x  {{ cart_item.product.price }} € </p>
-                            
-                        </div>
-                    {% endfor %}
-                    <p class="text-right font-bold border-t"> Total: {{ precio_total }} €</p>
+                <div class="mr-4">
+                    <label for="brand" class="mr-2 text-gray-700">Marca:</label>
+                    <select name="brand" id="brand" class="p-2 border border-gray-300 rounded">
+                        <option value="" {% if not brand_filter %}selected{% endif %}>Todas</option>
+                        {% for brand in brands %}
+                        <option value="{{ brand.name }}" {% if brand.name == brand_filter %}selected{% endif %}>
+                            {{ brand.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
                 </div>
-                
-            </div>
-        </div>
-        
-        <!-- Bloque de categorías (abajo de productos) -->
-        <div class="col-span-3">
-            <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
-                <h2 class="mb-12 text-2xl text-center">Categorías</h2>
+                <input type="text" name="q" placeholder="Buscar productos" class="mr-2 p-2">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Buscar</button>
+            </form>
 
-                <div class="grid grid-cols-3 gap-3">
-                    {% for category in categories %}
+            <div class="mt-10"></div>
+
+            <div class="grid grid-cols-3 gap-3">
+                {% for product in products %}
+                <div>
                     <a href="#">
+                        <div>
+                            <img src="{{ product.image.url }}" class="rounded-t-xl">
+                        </div>
+
                         <div class="p-6 bg-white rounded-b-xl">
-                            <h2 class="text-2xl">{{ category.name }}</h2>
-                            <p class="text-gray-500">{{ category.products.count }} productos</p>
+                            <h2 class="text-2xl">{{ product.name }}</h2>
+                            <p class="text-gray-500">Precio: {{ product.price }}</p>
                         </div>
                     </a>
-                    {% endfor %}
+                    <form id="miFormulario" action="{% url 'add_to_cart' product.id %}" method="GET">
+                        <input type="number" name="cantidad" id="cantidad" min="0" required>
+                        <button type="submit" class="bg-transparent text-black px-4 py-1 focus:outline-none">
+                            <i class="fa fa-plus-circle"></i>
+                        </button>
+                    </form>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
+
+    <!-- Nuevo bloque a la derecha de productos -->
+    <div class="col-span-1">
+        <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+            <h2 class="mb-8 text-2xl text-center">Carrito de la Compra
+            </h2>
+            <div class="felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
+                {% for cart_item in cart_items %}
+                <div class="flex justify-between mb-2">
+                    <p>{{ cart_item.quantity }} x {{ cart_item.product.name }}</p>
+                    <p>{{ cart_item.quantity }} x {{ cart_item.product.price }} € </p>
+
+                </div>
+                {% endfor %}
+                <p class="text-right font-bold border-t"> Total: {{ precio_total }} €</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bloque de categorías (abajo de productos) -->
+    <div class="col-span-3">
+        <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+            <h2 class="mb-12 text-2xl text-center">Categorías</h2>
+
+            <div class="grid grid-cols-3 gap-3">
+                {% for category in categories %}
+                <a href="#">
+                    <div class="p-6 bg-white rounded-b-xl">
+                        <h2 class="text-2xl">{{ category.name }}</h2>
+                        <p class="text-gray-500">{{ category.products.count }} productos</p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

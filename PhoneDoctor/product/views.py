@@ -6,8 +6,55 @@ from .models import Product
 
 
 # Create your views here.
-from .forms import NewProductForm, EditProductForm
+from .forms import NewProductForm, EditProductForm, NewBrandForm,NewCategoryForm
 
+
+@login_required
+def newCategory(request):
+    form = NewCategoryForm()
+    if not request.user.is_staff:
+        template = loader.get_template('product/403.html')
+        return HttpResponseForbidden(template.render({}, request))
+
+    if request.method == 'POST':
+        form = NewCategoryForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            item=form.save(commit=False)
+            item.save()
+
+            return redirect('/')
+        else:
+            form = NewCategoryForm()
+
+    return render(request, 'product/form.html', {
+        'form': form,
+        'title': 'Nueva Categoria',
+    })
+    
+@login_required
+def newBrand(request):
+    form = NewBrandForm()
+    if not request.user.is_staff:
+        template = loader.get_template('product/403.html')
+        return HttpResponseForbidden(template.render({}, request))
+
+    if request.method == 'POST':
+        form = NewBrandForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            item=form.save(commit=False)
+            item.save()
+
+            return redirect('/')
+        else:
+            form = NewBrandForm()
+
+    return render(request, 'product/form.html', {
+        'form': form,
+        'title': 'Nueva Marca',
+    })
+    
 @login_required
 def new(request):
 
@@ -23,7 +70,6 @@ def new(request):
             item.save()
 
             return redirect('/')
-            #return redirect('product:detail', pk=product.id)
     else:
         form = NewProductForm()
 
