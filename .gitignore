@@ -10,3 +10,4 @@ log/
 *.log
 
 venv
+PhoneDoctor/db.sqlite3

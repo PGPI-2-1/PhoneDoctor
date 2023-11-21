@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from product.models import Category, Product, Brand
+from shoppingCart.models import CartItem
+# Create your views here.
 
 def index(request):
     categories = Category.objects.all()
+    shoppingCarts = CartItem.objects.filter(user_id=request.user.id)
+    total = calcular_total(shoppingCarts)
     brands = Brand.objects.all()
     products = Product.objects.all()
 
@@ -27,8 +31,17 @@ def index(request):
 
     return render(request, 'core/index.html', {
         'categories': categories,
-        'brands': brands,
+        'brands': brands,   
         'products': products,
         'category_filter': category,
         'brand_filter': brand,
+        'cart_items':shoppingCarts,
+        'precio_total':total,
     })
+
+def calcular_total(items):
+    precio_total=0
+    for item in items:
+        precio_por_cantidad = item.quantity * item.product.price
+        precio_total = precio_total + precio_por_cantidad
+    return precio_total

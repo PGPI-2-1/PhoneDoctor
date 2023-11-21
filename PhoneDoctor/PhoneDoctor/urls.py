@@ -10,5 +10,6 @@ urlpatterns = [
     path('',index,name='index'), 
     path('admin/', admin.site.urls),
     path('usuario/', include('custom_user.urls')),
+    path('shoppingCart/', include('shoppingCart.urls')),
     path('product/', include('product.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'custom_user.apps.CustomUserConfig',
     'widget_tweaks',
     'product',
+    'shoppingCart'
 ]
 
 AUTH_USER_MODEL = 'custom_user.User'
