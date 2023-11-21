@@ -28,14 +28,14 @@
       "model": "product.Category",
       "fields":
       {
-        "name": "Screen"
+        "name": "Pantalla"
       }
     },
     {
       "model": "product.Category",
       "fields":
       {
-        "name": "Battery"
+        "name": "Batería"
       }
     },
     {

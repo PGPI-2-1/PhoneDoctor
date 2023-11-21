@@ -1,8 +1,28 @@
 from django import forms
-from .models import Product
+from .models import Product,Brand,Category
 
 INPUT_CLASSES = 'w-full py-4 px-6 rounded-xl border'
 
+class NewBrandForm(forms.ModelForm):
+     class Meta:
+        model = Brand
+        fields = ('name',)
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': INPUT_CLASSES
+            }),
+         }
+
+class NewCategoryForm(forms.ModelForm):
+     class Meta:
+        model = Category
+        fields = ('name',)
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': INPUT_CLASSES
+            }),
+         }
+              
 class NewProductForm(forms.ModelForm):
     class Meta:
         model = Product
