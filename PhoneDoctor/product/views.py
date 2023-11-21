@@ -10,7 +10,7 @@ from .forms import NewProductForm, EditProductForm, NewBrandForm,NewCategoryForm
 
 
 @login_required
-def newCategory(request):
+def new_category(request):
     form = NewCategoryForm()
     if not request.user.is_staff:
         template = loader.get_template('product/403.html')
@@ -33,7 +33,7 @@ def newCategory(request):
     })
     
 @login_required
-def newBrand(request):
+def new_brand(request):
     form = NewBrandForm()
     if not request.user.is_staff:
         template = loader.get_template('product/403.html')
@@ -100,11 +100,17 @@ def edit(request, pk):
             form.save()
 
             return redirect('/')
-            #return redirect('product:detail', pk=product.id)
     else:
         form = EditProductForm(instance=product)
 
     return render(request, 'product/form.html', {
         'form': form,
         'title': 'Modificar Producto',
+    })
+
+def product_info(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+
+    return render(request, 'product/info.html', {
+        'product': product
     })
