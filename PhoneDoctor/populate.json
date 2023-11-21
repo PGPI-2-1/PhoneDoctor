@@ -46,7 +46,7 @@
         "category": 1,
         "name": "Reparación de pantalla IPhone 13",
         "price": "100",
-        "image": "PhoneDoctor/media/item_images/iPhone.jpeg"
+        "image": "./item_images/iPhone.jpeg"
       }
     },
     {
@@ -57,7 +57,7 @@
         "category": 2,
         "name": "Reparación de bateria Samsung A20",
         "price": "75",
-        "image": "PhoneDoctor/media/item_images/iPhone.jpeg"
+        "image": "./item_images/iPhone.jpeg"
       }
     }
 ]
