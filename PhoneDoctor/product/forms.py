@@ -26,7 +26,7 @@ class NewCategoryForm(forms.ModelForm):
 class NewProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('brand','category','name','description','price','image',)
+        fields = ('brand','category','name','description','price','quantity','image',)
 
         widgets = {
             'brand': forms.Select(attrs={
@@ -55,7 +55,7 @@ class NewProductForm(forms.ModelForm):
 class EditProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('brand','category','name','description','price','image',)
+        fields = ('brand','category','name','description','price','quantity','image',)
 
         widgets = {
             'brand': forms.Select(attrs={
