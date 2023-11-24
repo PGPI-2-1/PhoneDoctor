@@ -1,14 +1,37 @@
 from django import forms
-from .models import Product
+from .models import Product,Brand,Category
 
 INPUT_CLASSES = 'w-full py-4 px-6 rounded-xl border'
 
+class NewBrandForm(forms.ModelForm):
+     class Meta:
+        model = Brand
+        fields = ('name',)
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': INPUT_CLASSES
+            }),
+         }
+
+class NewCategoryForm(forms.ModelForm):
+     class Meta:
+        model = Category
+        fields = ('name',)
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': INPUT_CLASSES
+            }),
+         }
+              
 class NewProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('category','name','description','price','quantity','image',)
+        fields = ('brand','category','name','description','price','image',)
 
         widgets = {
+            'brand': forms.Select(attrs={
+                'class': INPUT_CLASSES
+            }),
             'category': forms.Select(attrs={
                 'class': INPUT_CLASSES
             }),
@@ -32,9 +55,12 @@ class NewProductForm(forms.ModelForm):
 class EditProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('category','name','description','price','quantity','image',)
+        fields = ('brand','category','name','description','price','image',)
 
         widgets = {
+            'brand': forms.Select(attrs={
+                'class': INPUT_CLASSES
+            }),
             'category': forms.Select(attrs={
                 'class': INPUT_CLASSES
             }),

@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .forms import RegistrationForm, MyAuthForm
 from django.contrib.auth.views import LoginView
+from custom_user.models import User
+
 
 class RegistrationView(View):
     template_name = 'register.html'
@@ -35,3 +37,9 @@ class MyLoginView(LoginView):
         # Recupera mensajes de error del contexto de la sesión
         context['error_messages'] = self.request.session.pop('error_messages', None)
         return context
+
+
+def user_admin_view(request):
+    users = User.objects.all()
+
+    return render(request, "users.html",{'users': users})

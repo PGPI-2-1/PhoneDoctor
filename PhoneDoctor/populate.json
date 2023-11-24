@@ -1,0 +1,64 @@
+[
+  {
+    "model": "custom_user.User",
+    "fields": {
+      "email": "admin@admin.com",
+      "password": "pbkdf2_sha256$600000$ShBdsfn43U1wJUSNmJAvHO$sKdNbXaEA5QJKYFa7giD/jFUUzrX0kmdymemEWmWFlg=",
+      "is_superuser": true,
+      "is_staff": true
+    }
+  },
+  {
+    "model": "custom_user.User",
+    "fields": {
+      "email": "user@user.com",
+      "password": "pbkdf2_sha256$600000$ShBdsfn43U1wJUSNmJAvHO$sKdNbXaEA5QJKYFa7giD/jFUUzrX0kmdymemEWmWFlg=",
+      "is_superuser": false,
+      "is_staff": false
+    }
+  },
+  {
+    "model": "product.Brand",
+    "fields": {
+      "name": "Apple"
+    }
+  },
+  {
+    "model": "product.Brand",
+    "fields": {
+      "name": "Samsung"
+    }
+  },
+  {
+    "model": "product.Category",
+    "fields": {
+      "name": "Pantalla"
+    }
+  },
+  {
+    "model": "product.Category",
+    "fields": {
+      "name": "Batería"
+    }
+  },
+  {
+    "model": "product.Product",
+    "fields": {
+      "brand": 1,
+      "category": 1,
+      "name": "Reparación de pantalla IPhone 13",
+      "price": "100",
+      "image": "./item_images/iPhone.jpeg"
+    }
+  },
+  {
+    "model": "product.Product",
+    "fields": {
+      "brand": 2,
+      "category": 2,
+      "name": "Reparación de bateria Samsung A20",
+      "price": "75",
+      "image": "./item_images/iPhone.jpeg"
+    }
+  }
+]
