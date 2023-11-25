@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.template import loader
 from .models import Product
+from django.urls import reverse
 
 
 # Create your views here.
@@ -109,7 +110,10 @@ def edit(request, pk):
     })
 
 def product_info(request, pk):
-    product = get_object_or_404(Product, pk=pk)
+    try:
+        product = Product.objects.get(pk=pk)
+    except Product.DoesNotExist:
+        return render(request, 'product/404.html', {})
 
     return render(request, 'product/info.html', {
         'product': product
