@@ -1,0 +1,75 @@
+{% extends 'core/base.html' %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+
+    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+        <div class="felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
+            <h2 class="text-2xl text-center font-bold mb-2">Seguimiento del Pedido</h2>
+            <h2 class="text text-center font-semibold mb-2">Estado actual: {{order.status}}</h2>
+            <div class="progress-bar">
+                <div class="progress-step {% if order.status == 'pagado' %}active{% endif %}">
+                    <span>Pagado</span>
+                </div>
+                <div class="progress-step {% if order.status == 'enviado' %}active{% endif %}">
+                    <span>Enviado</span>
+                </div>
+                <div class="progress-step {% if order.status == 'completado' %}active{% endif %}">
+                    <span>Completado</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+        <div class="felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
+            <h2 class="text-2xl text-center font-bold mb-8">Resumen del Pedido</h2>
+            {% for item in order.items.all %}
+                <div class="flex justify-between mb-4">
+                    <p>{{ item.quantity }} x {{ item.product.name}} </p>
+                    <p>{{ item.quantity }} x {{ item.product.price}} €</p>
+                </div>
+            {% endfor %}
+            <p class="text-right font-bold border-t py-2">Total: {{order.precio_total}} €</p>
+            <p class="text-xl font-awsome">Pedido enviado a: </p>
+            <p>{{order.address}}</p>
+            <p class="text-xl font-awsome">Correo electrónico:  </p>
+            <p>{{order.email}}</p>
+        </div>
+    </div>
+
+    <style>
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .progress-step span {
+            display: block;
+            margin-top:50px; /* Ajuste para separar el cartel del estado y la barra de progreso */
+        }
+
+        .progress-step.active span::before {
+            content: '';
+            width: 100%;
+            height: 10px; /* Ajuste para hacer la barra más gruesa */
+            background-color: #3498db; /* Color de la barra activa */
+            position: absolute;
+            top: 50%; /* Ajuste para colocar la barra por debajo del cartel del estado */
+            transform: translateY(50%);
+            left: 0;
+        }
+
+    </style>
+
+    
+{% endblock %}
