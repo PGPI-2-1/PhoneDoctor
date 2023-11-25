@@ -3,6 +3,7 @@ from django.views import View
 from .forms import RegistrationForm, MyAuthForm
 from django.contrib.auth.views import LoginView
 from custom_user.models import User
+from django.contrib.auth.decorators import user_passes_test
 
 
 class RegistrationView(View):
@@ -39,6 +40,10 @@ class MyLoginView(LoginView):
         return context
 
 
+def is_staff(user):
+    return user.is_staff
+
+@user_passes_test(is_staff, login_url='login')
 def user_admin_view(request):
     users = User.objects.all()
 
