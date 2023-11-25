@@ -26,7 +26,7 @@ class NewCategoryForm(forms.ModelForm):
 class NewProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('brand','category','name','description','price','image',)
+        fields = ('brand','category','name','description','price','quantity','image',)
 
         widgets = {
             'brand': forms.Select(attrs={
@@ -45,6 +45,9 @@ class NewProductForm(forms.ModelForm):
                 'class': INPUT_CLASSES
             }),
             'image': forms.FileInput(attrs={
+                'class': INPUT_CLASSES
+            }),
+            'quantity': forms.NumberInput(attrs={
                 'class': INPUT_CLASSES
             }),
         }
@@ -52,7 +55,7 @@ class NewProductForm(forms.ModelForm):
 class EditProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('brand','category','name','description','price','image',)
+        fields = ('brand','category','name','description','price','quantity','image',)
 
         widgets = {
             'brand': forms.Select(attrs={
@@ -71,6 +74,9 @@ class EditProductForm(forms.ModelForm):
                 'class': INPUT_CLASSES
             }),
             'image': forms.FileInput(attrs={
+                'class': INPUT_CLASSES
+            }),
+            'quantity': forms.NumberInput(attrs={
                 'class': INPUT_CLASSES
             }),
         }

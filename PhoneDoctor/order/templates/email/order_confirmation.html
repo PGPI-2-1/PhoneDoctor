@@ -1,0 +1,23 @@
+<!-- templates/email/order_confirmation.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmación de Pedido</title>
+</head>
+<body>
+    <p>Hola, {{ email }}:</p>
+    <p>Tu pedido ha sido confirmado. Aquí está la información de tu orden:</p>
+    <p>Dirección: {{ address }}</p>
+    <p>Productos: </p>
+    <div class="felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
+        {% for cart_item in cart_items %}
+            <div class="flex justify-between mb-4">
+                <p>{{ cart_item.quantity }} x {{ cart_item.product.name }}  ....  {{ cart_item.quantity }} x {{ cart_item.product.price }} €</p>
+            </div>
+        {% endfor %}
+        <p>Total: {{ precio_total }} €</p>
+    </div>
+
+    <p>¡Gracias por tu compra!</p>
+</body>
+</html>

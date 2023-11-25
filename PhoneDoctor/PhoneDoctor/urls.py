@@ -9,7 +9,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('',index,name='index'), 
     path('admin/', admin.site.urls),
-    path('usuario/', include('custom_user.urls')),
+    path('user/', include('custom_user.urls')),
     path('shoppingCart/', include('shoppingCart.urls')),
     path('product/', include('product.urls')),
+    path('order/', include('order.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

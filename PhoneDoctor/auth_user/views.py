@@ -29,3 +29,6 @@ class CustomLoginView(LoginView):
 
 class CreateUserView(CreateUserView):
     form_class = UserCreationForm
+
+
+

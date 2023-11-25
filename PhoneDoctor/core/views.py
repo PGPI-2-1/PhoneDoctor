@@ -4,8 +4,16 @@ from shoppingCart.models import CartItem
 # Create your views here.
 
 def index(request):
+    mensaje=""
+    mensaje_cantidad=""
+    products = Product.objects.all()
     categories = Category.objects.all()
-    shoppingCarts = CartItem.objects.filter(user_id=request.user.id)
+    shoppingCarts = CartItem.objects.filter(user_id=request.user.id, is_processed=False)
+    if 'carrito_vacio' in request.session:
+        mensaje=request.session.pop('carrito_vacio',None)
+
+    if 'cantidad_superada' in request.session:
+        mensaje_cantidad=request.session.pop('cantidad_superada',None)
     total = calcular_total(shoppingCarts)
     brands = Brand.objects.all()
     products = Product.objects.all()
@@ -29,6 +37,7 @@ def index(request):
     elif query: 
         products = Product.objects.filter(name__icontains=query)
 
+    no_products = not products.exists()
     return render(request, 'core/index.html', {
         'categories': categories,
         'brands': brands,   
@@ -37,6 +46,9 @@ def index(request):
         'brand_filter': brand,
         'cart_items':shoppingCarts,
         'precio_total':total,
+        'mensaje':mensaje,
+        'mensaje_cantidad':mensaje_cantidad,
+        'no_products': no_products
     })
 
 def calcular_total(items):

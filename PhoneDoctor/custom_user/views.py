@@ -3,6 +3,9 @@ from django.views import View
 from .forms import RegistrationForm, MyAuthForm
 from django.contrib.auth.views import LoginView
 # Importar modelo Ventas
+from custom_user.models import User
+from django.contrib.auth.decorators import user_passes_test
+
 
 class RegistrationView(View):
     template_name = 'register.html'
@@ -37,6 +40,28 @@ class MyLoginView(LoginView):
         context['error_messages'] = self.request.session.pop('error_messages', None)
         return context
 
+def dashboard(request):
+    # sales = Sale.objects.all()
+    return render(request, 'dashboard.html', {'sales': 'sales'})    
+
+def is_staff(user):
+    return user.is_staff
+
+@user_passes_test(is_staff, login_url='login')
+def user_admin_view(request):
+    users = User.objects.all()
+
+    return render(request, "users.html",{'users': users})
+
+
+def is_staff(user):
+    return user.is_staff
+
+@user_passes_test(is_staff, login_url='login')
+def user_admin_view(request):
+    users = User.objects.all()
+
+    return render(request, "users.html",{'users': users})
 def dashboard(request):
     # sales = Sale.objects.all()
     return render(request, 'dashboard.html', {'sales': 'sales'})    
