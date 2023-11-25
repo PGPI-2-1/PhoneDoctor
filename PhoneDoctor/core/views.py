@@ -37,6 +37,7 @@ def index(request):
     elif query: 
         products = Product.objects.filter(name__icontains=query)
 
+    no_products = not products.exists()
     return render(request, 'core/index.html', {
         'categories': categories,
         'brands': brands,   
@@ -47,6 +48,7 @@ def index(request):
         'precio_total':total,
         'mensaje':mensaje,
         'mensaje_cantidad':mensaje_cantidad,
+        'no_products': no_products
     })
 
 def calcular_total(items):
