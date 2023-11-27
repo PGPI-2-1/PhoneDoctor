@@ -1,5 +1,4 @@
 from django.db import models
-from product.models import Product
 from custom_user.models import User
 from shoppingCart.models import CartItem
 

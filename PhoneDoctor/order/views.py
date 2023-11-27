@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Order
 from shoppingCart.models import CartItem
 from django.core.mail import send_mail
@@ -81,10 +81,14 @@ def my_orders(request):
 def order_review(request, order_id):
     if request.method == 'POST':
         form = NewReviewForm(request.POST, request.FILES)
+        order = get_object_or_404(Order, pk=order_id)
 
         if form.is_valid():
-            item=form.save(commit=False)
+            item = form.save(commit=False)
             item.save()
+            order.review = item
+            print(order.review)
+            order.save()
 
             return redirect('/order/my_orders')
     else:

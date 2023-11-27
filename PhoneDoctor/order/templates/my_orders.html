@@ -29,9 +29,11 @@
                         <div class="user-details">
                             <strong>Estado:</strong> {{ order.status|capfirst }}
                         </div>
+                        {% if not order.review %}
                         <div class="user-role">
                             <a class="staff-label" href="{% url 'order_review' order.id %}">Añadir opinión</a>
                         </div>
+                        {% endif %}
                     </li>
                     {% endfor %}
                 </ul>
