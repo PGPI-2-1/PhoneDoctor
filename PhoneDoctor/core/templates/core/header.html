@@ -42,11 +42,14 @@
                         <div class="flex items-left mr-4">
                             <a href="{% url 'user_admin_view' %}" class="inline-block px-4 py-2 border border-white rounded text-white font-bold">Usuarios</a>
                         </div>
+                        <div class="flex items-left mr-4">
+                            <a href="{% url 'order_admin_view' %}" class="inline-block px-4 py-2 border border-white rounded text-white font-bold">Ventas</a>
+                        </div>
+
                     {% endif %}
                     <p class="mr-4">Bienvenido, {{ user.email }} | <a href="{% url 'logout' %}" class="text-white">Cerrar sesión</a></p>
                     </div>
                     {% else %}
-                    <!-- Mueve el texto "Iniciar sesión" a la izquierda y agrega un margen derecho -->
                     <a href="{% url 'login' %}" class="mr-4 ml-8 text-white">Iniciar sesión</a>
                 {% endif %}
             </div>

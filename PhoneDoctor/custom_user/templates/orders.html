@@ -1,0 +1,39 @@
+{% extends 'base.html '%}
+{% load static %}
+{% block title %} Orders {% endblock %}
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'PhoneDoctor/core/static/core/style.css' %}">
+</head>
+
+{% block content %}
+    <h1>Panel de Ventas</h1>
+
+    <table class = "data-table" border="1">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Email</th>
+                <th>Dirección</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ order.user }}</td>
+                    <td>{{ order.email }}</td>
+                    <td>{{ order.address }}</td>
+                    <td>{{ order.items.product }}</td>
+                    <td>{{ order.items.quantity }}</td>
+                    <td>{{ order.precio_total}}</td>
+                </tr>
+            {% endfor %}
+
+            {% comment %} Ejemplo temporal {% endcomment %}
+            
+        </tbody>
+    </table>
+{% endblock %}

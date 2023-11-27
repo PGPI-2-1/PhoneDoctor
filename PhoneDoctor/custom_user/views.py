@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .forms import RegistrationForm, MyAuthForm
 from django.contrib.auth.views import LoginView
+from order.models import Order
 from custom_user.models import User
 from django.contrib.auth.decorators import user_passes_test
 
@@ -39,6 +40,9 @@ class MyLoginView(LoginView):
         context['error_messages'] = self.request.session.pop('error_messages', None)
         return context
 
+def order_admin_view(request):
+    orders = Order.objects.all()
+    return render(request, 'orders.html', {'orders': 'orders'})    
 
 def is_staff(user):
     return user.is_staff
@@ -48,3 +52,13 @@ def user_admin_view(request):
     users = User.objects.all()
 
     return render(request, "users.html",{'users': users})
+
+
+def is_staff(user):
+    return user.is_staff
+
+@user_passes_test(is_staff, login_url='login')
+def user_admin_view(request):
+    users = User.objects.all()
+
+    return render(request, "users.html",{'users': users})   
