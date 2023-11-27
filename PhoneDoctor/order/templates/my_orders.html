@@ -1,25 +1,36 @@
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 
-{% block title %} Lista de Usuarios {% endblock %}
+{% block title %} Mis pedidos {% endblock %}
 
 {% block content %}
 <div class="grid grid-cols-3 gap-6">
     <div class="col-span-3">
         <div class="mt-6 px-6 py-12 rounded-xl">
             <div class="user-list">
-                <h2 class="mb-8 text-2xl text-center">Lista de Usuarios</h2>
+                <h2 class="mb-8 text-2xl text-center">Mis pedidos</h2>
                 <ul class="user-table">
-                    {% for user in users %}
+                    {% for order in orders %}
                     <li class="user-item">
                         <div class="user-details">
-                            <strong>Correo Electrónico:</strong> {{ user.email }}
+                            <strong>Productos:</strong>
+                            {% for item in order.items.all %}
+                            <p>- {{ item.quantity }}x {{ item.product.name }}</p>
+                            {% endfor %}
+                        </div>
+                        <div class="user-details">
+                            <strong>Dirección:</strong> {{ order.address }}
+                        </div>
+                        <div class="user-details">
+                            <strong>Correo electrónico:</strong> {{ order.email }}
+                        </div>
+                        <div class="user-details">
+                            <strong>Precio total:</strong> {{ order.precio_total }}€
+                        </div>
+                        <div class="user-details">
+                            <strong>Estado:</strong> {{ order.status|capfirst }}
                         </div>
                         <div class="user-role">
-                            {% if user.is_staff %}
-                            <span class="staff-label">Equipo</span>
-                            {% else %}
-                            <span class="user-label">Usuario</span>
-                            {% endif %}
+                            <a class="staff-label" href="{% url 'order_review' order.id %}">Añadir opinión</a>
                         </div>
                     </li>
                     {% endfor %}
@@ -56,9 +67,6 @@
         list-style: none;
         border-bottom: 1px solid #ddd;
         padding: 10px 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
     }
 
     .user-details {
@@ -78,9 +86,9 @@
     }
 
     .staff-label {
-        color: #ff5858;
+        color: rgb(255, 255, 255);
         /* Red for staff */
-        background-color: #ffe6e6;
+        background-color: #5e8cff;
         /* Light red background */
     }
 
