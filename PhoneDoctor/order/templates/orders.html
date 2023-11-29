@@ -26,7 +26,7 @@
                     {% for item in order.items.all %}
                         <tr>
                             {% if forloop.first %}
-                                <td rowspan="{{ order.items.count }}">{{ order.user }}</td>
+                                <td rowspan="{{ order.items.count }}">{{ order.email }}</td>
                                 <td rowspan="{{ order.items.count }}">{{ order.address }}</td>
                                 <td rowspan="{{ order.items.count }}">{{ order.status }}</td>
                             {% endif %}
