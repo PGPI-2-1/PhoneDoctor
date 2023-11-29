@@ -1,0 +1,46 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title %} Orders {% endblock %}
+<head>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+{% block content %}
+    <h1>Panel de Ventas</h1>
+
+    {% if orders %}
+        <table class="data-table" border="1">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Dirección</th>
+                    <th>Estado del Pedido</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    {% for item in order.items.all %}
+                        <tr>
+                            {% if forloop.first %}
+                                <td rowspan="{{ order.items.count }}">{{ order.user }}</td>
+                                <td rowspan="{{ order.items.count }}">{{ order.address }}</td>
+                                <td rowspan="{{ order.items.count }}">{{ order.status }}</td>
+                            {% endif %}
+                            <td>{{ item.product.name }} ({{ item.product.price }}€)</td>
+                            <td>{{ item.quantity }}</td>
+                            {% if forloop.first %}
+                                <td rowspan="{{ order.items.count }}">{{ order.precio_total }}€</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="centered-message">No hay pedidos para mostrar.</p>
+    {% endif %}
+{% endblock %}

@@ -71,3 +71,10 @@ def seguimiento_pedido(request,order_id):
     order = Order.objects.get(id=order_id)
 
     return render(request,'seguimiento_pedido.html',{'order':order})
+
+def order_admin_view(request):
+    orders = Order.objects.all()
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'orders.html', context)
