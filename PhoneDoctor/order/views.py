@@ -4,6 +4,8 @@ from shoppingCart.models import CartItem
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.contrib.auth.decorators import user_passes_test
+
 
 def checkout(request):
     if not request.user.is_authenticated:      
@@ -72,6 +74,10 @@ def seguimiento_pedido(request,order_id):
 
     return render(request,'seguimiento_pedido.html',{'order':order})
 
+def is_staff(user):
+    return user.is_staff
+
+@user_passes_test(is_staff, login_url='login')
 def order_admin_view(request):
     orders = Order.objects.all()
     context = {
