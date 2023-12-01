@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+        <div class="felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
+            <h2 class="text-2xl text-center font-bold mb-8">Resumen de la Orden</h2>
+            {% for cart_item in cart_items %}
+                <div class="flex justify-between mb-4">
+                    <p>{{ cart_item.quantity }} x {{ cart_item.product.name }}</p>
+                    <p>{{ cart_item.quantity }} x {{ cart_item.product.price }} €</p>
+                </div>
+            {% endfor %}
+            <p class="text-right font-bold border-t py-2">Total: {{ precio_total }} €</p>
+            {% if cart_items|length  > 0 %}
+                <a href="{% url 'checkout' %}" class="text-center text-xl font-awesome mt-1 bg-blue-500 text-white px-4 py-2 rounded">Comprar</a>
+            {% endif %}
+        </div>
+    </div>
+
+    </div>
+
+    <!-- Script de Stripe -->
+ 
+{% endblock %}

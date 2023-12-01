@@ -104,3 +104,25 @@ def order_admin_view(request):
         'orders': orders,
     }
     return render(request, 'orders.html', context)
+
+
+def shopping_cart(request):
+    if not request.user.is_authenticated:      
+        cart_items = CartItem.objects.filter(user=None, is_processed = False)
+    else:
+        cart_items = CartItem.objects.filter(user=request.user, is_processed=False)
+
+    if len(cart_items) == 0:
+        precio_total = 0
+    else:
+        precio_total = sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items)
+
+    
+
+    context = {
+        'cart_items': cart_items,
+        'precio_total': precio_total,
+    }
+
+    return render(request, 'shopping_cart.html', context)
+
