@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from .forms import NewReviewForm
 
+
 def checkout(request):
     if not request.user.is_authenticated:      
         cart_items = CartItem.objects.filter(user=None, is_processed = False)
@@ -78,7 +79,14 @@ def my_orders(request):
 
     return render(request, 'my_orders.html' , {'orders': orders})
 
+
 def order_review(request, order_id):
+
+    order = Order.objects.get(pk = order_id)
+    print(order)
+    if request.user != order.user:
+        return render(request, '403.html')
+
     if request.method == 'POST':
         form = NewReviewForm(request.POST, request.FILES)
         order = get_object_or_404(Order, pk=order_id)

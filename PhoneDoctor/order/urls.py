@@ -5,5 +5,5 @@ urlpatterns = [
     path('checkout', checkout, name='checkout'),
     path('<int:order_id>/', seguimiento_pedido, name='seguimiento_pedido'),
     path('my_orders', my_orders, name='my_orders'),
-    path('review/<int:order_id>/', order_review, name='order_review')
+    path('review/<int:order_id>', order_review, name='order_review')
 ]

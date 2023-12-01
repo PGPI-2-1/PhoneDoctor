@@ -7,7 +7,10 @@ class NewReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ('title','description')
-
+        labels = {
+            'title': 'Título',
+            'description': 'Descripción',
+        }
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': INPUT_CLASSES

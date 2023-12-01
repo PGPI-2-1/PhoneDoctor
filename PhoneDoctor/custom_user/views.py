@@ -48,6 +48,8 @@ def order_admin_view(request):
 def is_staff(user):
     return user.is_staff
 
+
+
 @user_passes_test(is_staff, login_url='login')
 def user_admin_view(request):
     users = User.objects.all()
