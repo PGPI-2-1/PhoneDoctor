@@ -83,7 +83,6 @@ def my_orders(request):
 def order_review(request, order_id):
 
     order = Order.objects.get(pk = order_id)
-    print(order)
     if request.user != order.user:
         return render(request, '403.html')
 
@@ -95,7 +94,6 @@ def order_review(request, order_id):
             item = form.save(commit=False)
             item.save()
             order.review = item
-            print(order.review)
             order.save()
 
             return redirect('/order/my_orders')

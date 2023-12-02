@@ -31,4 +31,5 @@ class ProductInfoViewTest(TestCase):
         url = reverse('product_info', args=[999])
 
         response = self.client.get(url)
+        
         self.assertTemplateUsed(response, 'product/404.html')

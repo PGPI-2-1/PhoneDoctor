@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView
 from order.models import Order, Review
 from custom_user.models import User
 from django.contrib.auth.decorators import user_passes_test
+from django.http import Http404
 
 
 class RegistrationView(View):
@@ -56,8 +57,13 @@ def user_admin_view(request):
 
     return render(request, "users.html",{'users': users})
 
+@user_passes_test(is_staff, login_url='login')
 def order_review(request, order_id):
     order = get_object_or_404(Order, pk=order_id)
+    
     review = order.review
-
+    
+    if review == None:
+        raise Http404("El recurso no fue encontrado")
+        
     return render(request, 'review.html', {'review': review})
