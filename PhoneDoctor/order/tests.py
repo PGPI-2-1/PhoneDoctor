@@ -123,7 +123,7 @@ class ReviewViewTest(TestCase):
         form = NewReviewForm(data)
         self.assertFalse(form.is_valid())
         self.assertTrue('title' in form.errors)
-        print(form.errors)
+       
 
 
     def test_review_create_description_not_valid(self):

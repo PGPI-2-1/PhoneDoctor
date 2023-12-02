@@ -81,10 +81,14 @@ def new(request):
 
 @login_required
 def delete(request, pk):
-    product=get_object_or_404(Product, pk=pk)
-    product.delete()
+    if not request.user.is_staff:
+        template = loader.get_template('product/403.html')
+        return HttpResponseForbidden(template.render({}, request))
+    else:
+        product=get_object_or_404(Product, pk=pk)
+        product.delete()
 
-    return redirect('/')
+        return redirect('/')
 
 @login_required
 def edit(request, pk):
