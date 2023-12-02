@@ -57,3 +57,6 @@ def calcular_total(items):
         precio_por_cantidad = item.quantity * item.product.price
         precio_total = precio_total + precio_por_cantidad
     return precio_total
+
+def about_us(request):   
+    return render(request, 'core/about_us.html')
