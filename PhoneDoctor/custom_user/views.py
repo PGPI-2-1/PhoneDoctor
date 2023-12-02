@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import RegistrationForm, MyAuthForm
 from django.contrib.auth.views import LoginView
-from order.models import Order
+from order.models import Order, Review
 from custom_user.models import User
 from django.contrib.auth.decorators import user_passes_test
+from django.http import Http404
 
 
 class RegistrationView(View):
@@ -38,10 +39,17 @@ class MyLoginView(LoginView):
         context = super().get_context_data(**kwargs)
         # Recupera mensajes de error del contexto de la sesión
         context['error_messages'] = self.request.session.pop('error_messages', None)
-        return context  
+        return context
+
+def order_admin_view(request):
+    orders = Order.objects.all()
+
+    return render(request, 'orders.html', {'orders': orders})    
 
 def is_staff(user):
     return user.is_staff
+
+
 
 @user_passes_test(is_staff, login_url='login')
 def user_admin_view(request):
@@ -49,12 +57,13 @@ def user_admin_view(request):
 
     return render(request, "users.html",{'users': users})
 
-
-def is_staff(user):
-    return user.is_staff
-
 @user_passes_test(is_staff, login_url='login')
-def user_admin_view(request):
-    users = User.objects.all()
-
-    return render(request, "users.html",{'users': users})   
+def order_review(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+    
+    review = order.review
+    
+    if review == None:
+        raise Http404("El recurso no fue encontrado")
+        
+    return render(request, 'review.html', {'review': review})

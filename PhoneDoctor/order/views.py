@@ -1,9 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Order
 from shoppingCart.models import CartItem
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from .forms import NewReviewForm
+
 from django.contrib.auth.decorators import user_passes_test
 import stripe
 
@@ -80,7 +82,7 @@ def checkout(request):
 
     return render(request, 'checkout.html', context)
 
-def enviar_correo(request,address,precio_total,cart_items,email):
+def enviar_correo(request, address, precio_total, cart_items, email):
     subject = 'Confirmación de Pedido'
     message = render_to_string('email/order_confirmation.html', {'email':email,'address': address, 'precio_total':precio_total, 'cart_items':cart_items})
     plain_message = strip_tags(message)
@@ -92,6 +94,38 @@ def enviar_correo(request,address,precio_total,cart_items,email):
 def seguimiento_pedido(request,order_id):
     order = Order.objects.get(id=order_id)
 
+    return render(request,'seguimiento_pedido.html', {'order':order})
+
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user.id)
+
+    return render(request, 'my_orders.html' , {'orders': orders})
+
+
+def order_review(request, order_id):
+
+    order = Order.objects.get(pk = order_id)
+    if request.user != order.user:
+        return render(request, '403.html')
+
+    if request.method == 'POST':
+        form = NewReviewForm(request.POST, request.FILES)
+        order = get_object_or_404(Order, pk=order_id)
+
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.save()
+            order.review = item
+            order.save()
+
+            return redirect('/order/my_orders')
+    else:
+        form = NewReviewForm()
+
+    return render(request, 'form.html', {
+        'form': form,
+        'title': 'Nueva opinión',
+    })
     return render(request,'seguimiento_pedido.html',{'order':order})
 
 def is_staff(user):
@@ -104,3 +138,25 @@ def order_admin_view(request):
         'orders': orders,
     }
     return render(request, 'orders.html', context)
+
+
+def shopping_cart(request):
+    if not request.user.is_authenticated:      
+        cart_items = CartItem.objects.filter(user=None, is_processed = False)
+    else:
+        cart_items = CartItem.objects.filter(user=request.user, is_processed=False)
+
+    if len(cart_items) == 0:
+        precio_total = 0
+    else:
+        precio_total = sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items)
+
+    
+
+    context = {
+        'cart_items': cart_items,
+        'precio_total': precio_total,
+    }
+
+    return render(request, 'shopping_cart.html', context)
+
