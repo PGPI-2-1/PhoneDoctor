@@ -1,29 +1,19 @@
 {% extends 'core/base.html' %}
 
-{% block title %} Lista de Usuarios {% endblock %}
+{% block title %} Opinion {% endblock %}
 
 {% block content %}
 <div class="grid grid-cols-3 gap-6">
     <div class="col-span-3">
         <div class="mt-6 px-6 py-12 rounded-xl">
             <div class="user-list">
-                <h2 class="mb-8 text-2xl text-center">Lista de Usuarios</h2>
-                <ul class="user-table">
-                    {% for user in users %}
-                    <li class="user-item">
-                        <div class="user-details">
-                            <strong>Correo Electrónico:</strong> {{ user.email }}
-                        </div>
-                        <div class="user-role">
-                            {% if user.is_staff %}
-                            <span class="staff-label">Equipo</span>
-                            {% else %}
-                            <span class="user-label">Usuario</span>
-                            {% endif %}
-                        </div>
-                    </li>
-                    {% endfor %}
-                </ul>
+                <h2 class="mb-8 text-2xl text-center">Opinión</h2>
+                <div class="user-details">
+                    <strong>Título: </strong>{{ review.title }}
+                </div>
+                <div class="user-details">
+                    <strong>Descripción: </strong>{{ review.description }}
+                </div>
             </div>
         </div>
     </div>
@@ -56,9 +46,6 @@
         list-style: none;
         border-bottom: 1px solid #ddd;
         padding: 10px 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
     }
 
     .user-details {
@@ -78,9 +65,9 @@
     }
 
     .staff-label {
-        color: #ff5858;
+        color: rgb(255, 255, 255);
         /* Red for staff */
-        background-color: #ffe6e6;
+        background-color: #5e8cff;
         /* Light red background */
     }
 
