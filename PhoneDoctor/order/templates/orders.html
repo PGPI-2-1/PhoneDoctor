@@ -19,6 +19,8 @@
                     <th>Producto</th>
                     <th>Cantidad</th>
                     <th>Total</th>
+                    <th>Precio Total con Envío</th>
+                    <th>Opinión</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +36,14 @@
                             <td>{{ item.quantity }}</td>
                             {% if forloop.first %}
                                 <td rowspan="{{ order.items.count }}">{{ order.precio_total }}€</td>
+                                <td rowspan="{{ order.items.count }}">{{ order.total_price_with_shipping }}€</td>
+                                <td rowspan="{{ order.items.count }}">
+                                    {% if order.review.id %}
+                                        <a class="staff-label" href="/user/order/{{order.id}}/review">Ver Opiniones</a>
+                                    {% else %}
+                                        <p>No hay opiniones</p>
+                                    {% endif %}
+                                </td>
                             {% endif %}
                         </tr>
                     {% endfor %}

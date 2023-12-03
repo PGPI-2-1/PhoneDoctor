@@ -1,10 +1,10 @@
 {% extends 'core/base.html' %}
-
+{% load static %}
 {% block title %} Welcome {% endblock %}
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-        integrity="sha512-xxxxxx" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-xxxxxx" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{% static '/style.css' %}">
 </head>
 {% block content %}
 <div class="grid grid-cols-3 gap-6">
@@ -90,6 +90,7 @@
                     <p class="text-right font-bold border-t"> Total: {{ precio_total }} €</p>
                     
                     <a href="{% url 'checkout' %}" class="text-center text-xl font-awesome mt-1 bg-blue-500 text-white px-4 py-2 rounded">Comprar</a>
+                    <p class="shipping-message">El envío se calcula en la pasarela de pagos.<br> Envío gratuito a partir de 100€</p>
                     <p style="color: red;">{{ mensaje }}</p>
                 
                 </div>

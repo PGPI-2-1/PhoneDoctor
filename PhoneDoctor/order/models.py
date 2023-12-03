@@ -22,4 +22,12 @@ class Order(models.Model):
     address = models.CharField(max_length=255, null=False, blank=False)
     email = models.EmailField(max_length=100, null=True)
     status = models.CharField(max_length=20, choices=StatusChoices.choices, default=None, null=True)
+    shipping_cost = models.FloatField(default=10.0)
     precio_total = models.FloatField()
+
+    @property
+    def total_price_with_shipping(self):
+        if self.precio_total > 100.0:
+            return self.precio_total
+        else:
+            return self.precio_total + self.shipping_cost

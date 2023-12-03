@@ -39,17 +39,10 @@ class MyLoginView(LoginView):
         context = super().get_context_data(**kwargs)
         # Recupera mensajes de error del contexto de la sesión
         context['error_messages'] = self.request.session.pop('error_messages', None)
-        return context
-
-def order_admin_view(request):
-    orders = Order.objects.all()
-
-    return render(request, 'orders.html', {'orders': orders})    
+        return context   
 
 def is_staff(user):
     return user.is_staff
-
-
 
 @user_passes_test(is_staff, login_url='login')
 def user_admin_view(request):

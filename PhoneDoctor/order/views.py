@@ -23,6 +23,13 @@ def checkout(request):
 
     precio_total = sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items)
 
+    if precio_total > 100.0:
+        shipping_cost = 0.0
+    else:
+        shipping_cost = 10.0
+
+    precio_total_con_envio = precio_total + shipping_cost
+
     if request.method == 'POST':
         token = request.POST.get('stripeToken')
         try:
@@ -37,7 +44,7 @@ def checkout(request):
 
             if request.user.is_authenticated:
                 email = request.user.email
-                order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PAGADO, precio_total=precio_total)
+                order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PAGADO, precio_total=precio_total,shipping_cost=shipping_cost)
                 order.items.set([item for item in cart_items])
                 for item in cart_items:
                     producto=item.product
@@ -48,7 +55,7 @@ def checkout(request):
                 #enviar_correo(request,address,precio_total,cart_items,request.user.email)
             else:
                 email = request.POST.get('email')
-                order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PAGADO, precio_total=precio_total)
+                order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PAGADO, precio_total=precio_total,shipping_cost=shipping_cost)
                 order.items.set([item for item in cart_items])
                 for item in cart_items:
                     producto=item.product
@@ -70,15 +77,19 @@ def checkout(request):
             error_message = e.error.message
             context = {
                 'cart_items': cart_items,
-                'precio_total': precio_total,
+                'precio_total': precio_total_con_envio,
+                'shipping_cost': shipping_cost,
                 'error_message': error_message,
             }
             return render(request, 'checkout.html', context)
 
     context = {
-        'cart_items': cart_items,
-        'precio_total': precio_total,
+    'cart_items': cart_items,
+    'precio_total': precio_total,
+    'precio_total_con_envio': precio_total_con_envio,
+    'shipping_cost': shipping_cost,
     }
+
 
     return render(request, 'checkout.html', context)
 
@@ -151,11 +162,18 @@ def shopping_cart(request):
     else:
         precio_total = sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items)
 
-    
+    if precio_total > 100.0:
+        shipping_cost = 0.0
+    else:
+        shipping_cost = 10.0
+
+    precio_total_con_envio = precio_total + shipping_cost
 
     context = {
-        'cart_items': cart_items,
-        'precio_total': precio_total,
+    'cart_items': cart_items,
+    'precio_total': precio_total,
+    'precio_total_con_envio': precio_total_con_envio,
+    'shipping_cost': shipping_cost,
     }
 
     return render(request, 'shopping_cart.html', context)
