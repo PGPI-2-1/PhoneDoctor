@@ -45,7 +45,11 @@ def checkout(request):
 
             if request.user.is_authenticated:
                 email = request.user.email
-                order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PAGADO, precio_total=precio_total)
+
+                #generar token unico para cada pedido: 
+                tracking = generate_unique_random_string()
+
+                order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PAGADO, precio_total=precio_total, id_tracking = tracking)
                 order.items.set([item for item in cart_items])
                 for item in cart_items:
                     producto=item.product

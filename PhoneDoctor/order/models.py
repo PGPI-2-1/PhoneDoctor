@@ -23,3 +23,4 @@ class Order(models.Model):
     email = models.EmailField(max_length=100, null=True)
     status = models.CharField(max_length=20, choices=StatusChoices.choices, default=None, null=True)
     precio_total = models.FloatField()
+    id_tracking = models.CharField(max_length=10, default=None)
