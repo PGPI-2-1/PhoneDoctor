@@ -5,11 +5,19 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from .forms import NewReviewForm
+import secrets 
 
 from django.contrib.auth.decorators import user_passes_test
 import stripe
 
 stripe.api_key = "sk_test_51OHPZ9JkuoHLkF3tWqXW9fp8DYhNOJS52uFwcaWmwiIxX5uL7DjU8nWx4mqyvVZsqLBPFFwXFxVdLSKT71O5c1JV00DuU1Cp7O"
+
+def generate_unique_random_string(length=10):
+    while True: 
+        random_string = secrets.token_urlsafe(length)[:length]
+        if not Order.objects.filter(id_tracking=random_string).exists():
+            break
+    return random_string
 
 def checkout(request):
     if not request.user.is_authenticated:      
@@ -160,3 +168,11 @@ def shopping_cart(request):
 
     return render(request, 'shopping_cart.html', context)
 
+def search_order(request): 
+    query = request.GET.get('q', '').strip() 
+
+    if(Order.objects.filter(id_tracking = query)): 
+        order = get_object_or_404(Order, id_tracking=query) 
+        return render(request, 'seguimiento_pedido.html', {'order': order}) 
+    else:
+       return render(request, '404.html')
