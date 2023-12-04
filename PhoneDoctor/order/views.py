@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from .forms import NewReviewForm
+from .models import Review
 
 from django.contrib.auth.decorators import user_passes_test
 import stripe
@@ -103,21 +104,19 @@ def my_orders(request):
 
 
 def order_review(request, order_id):
+    order = Order.objects.get(pk=order_id)
 
-    order = Order.objects.get(pk = order_id)
     if request.user != order.user:
         return render(request, '403.html')
 
     if request.method == 'POST':
         form = NewReviewForm(request.POST, request.FILES)
-        order = get_object_or_404(Order, pk=order_id)
-
         if form.is_valid():
             item = form.save(commit=False)
+            item.is_accepted = Review.AcceptionStatus.PENDING
             item.save()
             order.review = item
             order.save()
-
             return redirect('/order/my_orders')
     else:
         form = NewReviewForm()
@@ -125,8 +124,9 @@ def order_review(request, order_id):
     return render(request, 'form.html', {
         'form': form,
         'title': 'Nueva opinión',
+        'order': order,
     })
-    return render(request,'seguimiento_pedido.html',{'order':order})
+
 
 def is_staff(user):
     return user.is_staff
