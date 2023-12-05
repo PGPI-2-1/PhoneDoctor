@@ -1,8 +1,11 @@
 # myapp/tests.py
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 from custom_user.models import User
 from product.models import Brand, Category, Product
+from order.models import Order, Review
+from shoppingCart.models import CartItem
+from order.forms import NewReviewForm
 
 class UserAdminViewTest(TestCase):
     def setUp(self):
@@ -41,6 +44,12 @@ class UserAdminViewTest(TestCase):
             image='./item_images/Samsung.jpeg'
         )
 
+        self.cartItem = CartItem.objects.create(user = self.normal_user, product = self.iphone_product, quantity = 1,  is_processed = True)
+        self.order = Order.objects.create(user = self.normal_user, address = "ETSII", email = self.normal_user.email, status = Order.StatusChoices.PAGADO, precio_total = 100.)
+        self.order.items.add(self.cartItem)
+
+        self.client = Client()
+
     def test_staff_access_user_admin_view(self):
         self.client.force_login(self.admin_user)
 
@@ -58,3 +67,54 @@ class UserAdminViewTest(TestCase):
         self.assertEqual(response.status_code, 200)  
         
         self.assertNotContains(response, 'Lista de Usuarios')
+
+    def test_review_status_change_view(self):
+
+        self.client.login(email='user@user.com', password='password123')
+        url = reverse('order_review', args=[self.order.pk])
+
+        
+        data = {
+            'id': 1,
+            'title': 'Mi Título de Revisión',
+            'description': 'Mi Descripción de Revisión',
+        }
+        form = NewReviewForm(data)
+        self.assertTrue(form.is_valid())
+        response = self.client.post(url, data)
+        
+        self.assertEqual(response.status_code, 302)
+    
+        review = Review.objects.get(pk=1)
+        self.assertEqual(review.title, data['title'])
+        self.assertEqual(review.description, data['description'])
+        self.assertEqual(review.is_accepted, 'pendiente')
+
+        self.client.logout()
+        self.client.login(email='admin@admin.com', password='password123')
+
+        url = reverse('order_review_admin', args=[self.order.pk])
+        
+        self.assertEqual(review.title, data['title'])
+        self.assertEqual(review.description, data['description'])
+        self.assertEqual(review.is_accepted, 'pendiente')
+
+        # Cambiar el estado is_accepted a 'aceptado'
+        url_change_status = reverse('order_review_admin', args=[self.order.pk])
+        data_change_status = {
+            'is_accepted': 'aceptado',
+        }
+        response_change_status = self.client.post(url_change_status, data_change_status)
+
+        self.assertEqual(response_change_status.status_code, 200)
+
+        review.refresh_from_db()
+
+        self.assertEqual(review.is_accepted, 'aceptado')
+
+        self.client.logout()
+
+        self.client.login(email='user@user.com', password='password123')
+        url = reverse('order_review', args=[self.order.pk])
+
+        self.assertEqual(review.is_accepted, 'aceptado')

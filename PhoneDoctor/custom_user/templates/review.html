@@ -14,6 +14,21 @@
                 <div class="user-details">
                     <strong>Descripción: </strong>{{ review.description }}
                 </div>
+                <div class="user-details">
+                    <strong>Estado: </strong>{{ review.is_accepted|capfirst }}
+                </div>
+                <div style="text-align: right;">
+                <form method="post" action="{% url 'order_review_admin' review.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <strong for="id_is_accepted">Cambiar Estado:</strong>
+                    <select name="is_accepted" id="id_is_accepted">
+                        <option value="aceptado">Aceptado</option>
+                        <option value="rechazado">Rechazado</option>
+                        <option value="pendiente">Pendiente</option>
+                    </select>
+                    <button class="ml-2 py-1 px-1 text-lg bg-blue-500 hover:bg-teal-700 rounded-xl text-white">Guardar</button>
+                </form>
+            </div>
             </div>
         </div>
     </div>

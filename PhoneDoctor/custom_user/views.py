@@ -49,8 +49,6 @@ def order_admin_view(request):
 def is_staff(user):
     return user.is_staff
 
-
-
 @user_passes_test(is_staff, login_url='login')
 def user_admin_view(request):
     users = User.objects.all()
@@ -65,5 +63,13 @@ def order_review(request, order_id):
     
     if review == None:
         raise Http404("El recurso no fue encontrado")
+
+    if request.method == 'POST':
+        new_status = request.POST.get('is_accepted')
+        if new_status in [Review.AcceptionStatus.ACCEPTED, Review.AcceptionStatus.DECLINED, Review.AcceptionStatus.PENDING]:
+            review.is_accepted = new_status
+            review.save()
+        else:
+            return HttpResponseBadRequest("Estado de revisión no válido")
         
     return render(request, 'review.html', {'review': review})

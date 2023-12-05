@@ -3,8 +3,14 @@ from custom_user.models import User
 from shoppingCart.models import CartItem
 
 class Review(models.Model):
+    class AcceptionStatus(models.TextChoices):
+        ACCEPTED = 'aceptado', 'Aceptado'
+        PENDING = 'pendiente', 'Pendiente'
+        DECLINED = 'rechazado', 'Rechazado'
+
     title = models.CharField(max_length=50, blank=False, null=False)
     description = models.CharField(max_length=255, blank=False, null=False)
+    is_accepted = models.CharField(max_length=20, choices=AcceptionStatus.choices, default=AcceptionStatus.PENDING)
 
     def __str__(self):
         return self.title

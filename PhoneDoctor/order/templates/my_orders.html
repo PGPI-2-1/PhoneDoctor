@@ -27,7 +27,7 @@
                             <strong>Precio total:</strong> {{ order.precio_total }}€
                         </div>
                         <div class="user-details">
-                            <strong>Estado:</strong> {{ order.status|capfirst }}
+                            {{ order.status|capfirst }}
                         </div>
                         <div class="user-details">
                             <strong>Id de seguimiento:</strong> {{ order.id_tracking }}
@@ -36,6 +36,18 @@
                         <div class="user-role">
                             <a class="staff-label" href="{% url 'order_review' order.id %}">Añadir opinión</a>
                         </div>
+                        {% else %}
+                        <div class="user-role">
+                            <strong>Estado de la reclamación: </strong>
+                            {% if order.review.is_accepted == "aceptado" %}
+                            <a style="color: green">Aceptado</a>
+                            {% elif order.review.is_accepted == "rechazado" %}
+                            <a style="color: red">Rechazado</a>
+                            {% elif order.review.is_accepted == "pendiente" %}
+                            <a style="color: gray">Pendiente</a>
+                            {% endif %}
+                        </div>
+
                         {% endif %}
                     </li>
                     {% endfor %}
