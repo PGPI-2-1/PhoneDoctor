@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="grid grid-cols-3 gap-6">
-    <div class="col-span-2">
+    <div class="col-span-3">
         <div class="mt-6 px-6 py-12 rounded-xl">
             <div class="user-list">
                 <h2 class="mb-8 text-2xl text-center">Mis pedidos</h2>
@@ -30,7 +30,7 @@
                             <strong>Estado:</strong> {{ order.status|capfirst }}
                         </div>
                         <div class="user-details">
-                            <strong>ID de seguimiento:</strong> {{ order.id_tracking }}
+                            <strong>Id de seguimiento:</strong> {{ order.id_tracking }}
                         </div>
                         {% if not order.review %}
                         <div class="user-role">
@@ -41,17 +41,6 @@
                     {% endfor %}
                 </ul>
             </div>
-        </div>
-    </div>
-
-    <div class="col-span-1 mt-4">
-        <div class="mt-6 px-6 py-12 rounded-xl">
-            <form action="search_order" method="get" class="flex items-center">
-                <input type="text" name="q" placeholder="Buscar pedido" class="px-4 py-2 bg-gray-300 text-gray-800 placeholder-black focus:outline-none border-none rounded-l-md">
-                <button type="submit" class="bg-blue-800 text-white px-4 py-2 focus:outline-none rounded-r-md">
-                    <i class="fa fa-search"></i>
-                </button>
-            </form>
         </div>
     </div>
 </div>
@@ -71,11 +60,6 @@
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         padding: 20px;
-    }
-
-    .fa-search {
-        color: #fff;
-        font-size: 1.2em;
     }
 
     .user-table {
