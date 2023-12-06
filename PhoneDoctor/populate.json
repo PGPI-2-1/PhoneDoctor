@@ -57,9 +57,9 @@
     "fields": {
       "brand": 2,
       "category": 2,
-      "name": "Reparación de bateria Samsung A20",
+      "name": "Reparación de bateria Samsung A53 5G",
       "price": "75",
-      "image": "./item_images/iPhone.jpeg",
+      "image": "./item_images/samsung.jpg",
       "quantity": 20
     }
   }

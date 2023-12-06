@@ -5,7 +5,7 @@ from django.contrib.auth.views import LoginView
 from order.models import Order, Review
 from custom_user.models import User
 from django.contrib.auth.decorators import user_passes_test
-from django.http import Http404
+from django.http import Http404, HttpResponseBadRequest
 
 
 class RegistrationView(View):
@@ -67,4 +67,4 @@ def order_review(request, order_id):
         else:
             return HttpResponseBadRequest("Estado de revisión no válido")
         
-    return render(request, 'review.html', {'review': review})
+    return render(request, 'review.html', {'order':order,'review': review})

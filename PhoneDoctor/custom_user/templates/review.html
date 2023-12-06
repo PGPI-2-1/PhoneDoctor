@@ -18,7 +18,7 @@
                     <strong>Estado: </strong>{{ review.is_accepted|capfirst }}
                 </div>
                 <div style="text-align: right;">
-                <form method="post" action="{% url 'order_review_admin' review.id %}" enctype="multipart/form-data">
+                <form method="post" action="{% url 'order_review_admin' order.id %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <strong for="id_is_accepted">Cambiar Estado:</strong>
                     <select name="is_accepted" id="id_is_accepted">
