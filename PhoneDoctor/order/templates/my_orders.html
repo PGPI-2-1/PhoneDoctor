@@ -29,6 +29,9 @@
                         <div class="user-details">
                             {{ order.status|capfirst }}
                         </div>
+                        <div class="user-details">
+                            <strong>Id de seguimiento:</strong> {{ order.id_tracking }}
+                        </div>
                         {% if not order.review %}
                         <div class="user-role">
                             <a class="staff-label" href="{% url 'order_review' order.id %}">Añadir opinión</a>
