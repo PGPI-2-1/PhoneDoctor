@@ -5,11 +5,19 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from .forms import NewReviewForm
-
+import secrets 
+from .models import Review
 from django.contrib.auth.decorators import user_passes_test
 import stripe
 
 stripe.api_key = "sk_test_51OHPZ9JkuoHLkF3tWqXW9fp8DYhNOJS52uFwcaWmwiIxX5uL7DjU8nWx4mqyvVZsqLBPFFwXFxVdLSKT71O5c1JV00DuU1Cp7O"
+
+def generate_unique_random_string(length=10):
+    while True: 
+        random_string = secrets.token_urlsafe(length)[:length]
+        if not Order.objects.filter(id_tracking=random_string).exists():
+            break
+    return random_string
 
 def checkout(request):
     if not request.user.is_authenticated:      
@@ -37,7 +45,11 @@ def checkout(request):
 
             if request.user.is_authenticated:
                 email = request.user.email
-                order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PAGADO, precio_total=precio_total)
+
+                #generar token unico para cada pedido: 
+                tracking = generate_unique_random_string()
+
+                order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PAGADO, precio_total=precio_total, id_tracking = tracking)
                 order.items.set([item for item in cart_items])
                 for item in cart_items:
                     producto=item.product
@@ -47,8 +59,10 @@ def checkout(request):
                 order.save()
                 #enviar_correo(request,address,precio_total,cart_items,request.user.email)
             else:
+                #generar token unico para cada pedido: 
+                tracking = generate_unique_random_string()
                 email = request.POST.get('email')
-                order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PAGADO, precio_total=precio_total)
+                order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PAGADO, precio_total=precio_total, id_tracking = tracking)
                 order.items.set([item for item in cart_items])
                 for item in cart_items:
                     producto=item.product
@@ -103,21 +117,19 @@ def my_orders(request):
 
 
 def order_review(request, order_id):
+    order = Order.objects.get(pk=order_id)
 
-    order = Order.objects.get(pk = order_id)
     if request.user != order.user:
         return render(request, '403.html')
 
     if request.method == 'POST':
         form = NewReviewForm(request.POST, request.FILES)
-        order = get_object_or_404(Order, pk=order_id)
-
         if form.is_valid():
             item = form.save(commit=False)
+            item.is_accepted = Review.AcceptionStatus.PENDING
             item.save()
             order.review = item
             order.save()
-
             return redirect('/order/my_orders')
     else:
         form = NewReviewForm()
@@ -125,8 +137,9 @@ def order_review(request, order_id):
     return render(request, 'form.html', {
         'form': form,
         'title': 'Nueva opinión',
+        'order': order,
     })
-    return render(request,'seguimiento_pedido.html',{'order':order})
+
 
 def is_staff(user):
     return user.is_staff
@@ -160,3 +173,11 @@ def shopping_cart(request):
 
     return render(request, 'shopping_cart.html', context)
 
+def search_order(request): 
+    query = request.GET.get('q', '').strip() 
+
+    if(Order.objects.filter(id_tracking = query)): 
+        order = get_object_or_404(Order, id_tracking=query) 
+        return render(request, 'seguimiento_pedido.html', {'order': order}) 
+    else:
+       return render(request, '404.html')

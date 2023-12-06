@@ -152,3 +152,13 @@ class IndexViewTest(TestCase):
         response = self.client.get(reverse('index'), {'brand': 'Apple'})
         self.assertContains(response, 'Reparación de pantalla IPhone 13')
         self.assertNotContains(response, 'Reparación de batería Samsung A20')
+
+class AboutUsViewTest(TestCase):
+
+    def test_about_us_view(self):
+
+        url = reverse('about_us')
+        response = self.client.get(url)
+
+        self.assertTemplateUsed(response,'core/about_us.html')
+        self.assertEqual(response.status_code, 200)
