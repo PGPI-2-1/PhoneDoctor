@@ -3,8 +3,14 @@ from custom_user.models import User
 from shoppingCart.models import CartItem
 
 class Review(models.Model):
+    class AcceptionStatus(models.TextChoices):
+        ACCEPTED = 'aceptado', 'Aceptado'
+        PENDING = 'pendiente', 'Pendiente'
+        DECLINED = 'rechazado', 'Rechazado'
+
     title = models.CharField(max_length=50, blank=False, null=False)
     description = models.CharField(max_length=255, blank=False, null=False)
+    is_accepted = models.CharField(max_length=20, choices=AcceptionStatus.choices, default=AcceptionStatus.PENDING)
 
     def __str__(self):
         return self.title
@@ -22,6 +28,8 @@ class Order(models.Model):
     address = models.CharField(max_length=255, null=False, blank=False)
     email = models.EmailField(max_length=100, null=True)
     status = models.CharField(max_length=20, choices=StatusChoices.choices, default=None, null=True)
+    precio_total = models.FloatField()
+    id_tracking = models.CharField(max_length=10, default=None)
     shipping_cost = models.FloatField(default=10.0)
     precio_total = models.FloatField()
 
@@ -31,3 +39,4 @@ class Order(models.Model):
             return self.precio_total
         else:
             return self.precio_total + self.shipping_cost
+

@@ -89,4 +89,3 @@ class ProductViewTest(TestCase):
         self.assertEqual(updated_product.brand, self.brand)
         self.assertEqual(updated_product.category, self.category)
         self.assertEqual(updated_product.quantity, 5)
-
