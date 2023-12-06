@@ -30,3 +30,13 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=StatusChoices.choices, default=None, null=True)
     precio_total = models.FloatField()
     id_tracking = models.CharField(max_length=10, default=None)
+    shipping_cost = models.FloatField(default=10.0)
+    precio_total = models.FloatField()
+
+    @property
+    def total_price_with_shipping(self):
+        if self.precio_total > 100.0:
+            return self.precio_total
+        else:
+            return self.precio_total + self.shipping_cost
+

@@ -12,6 +12,8 @@
                 </div>
             {% endfor %}
             <p class="text-right font-bold border-t py-2">Total: {{ precio_total }} €</p>
+            <p class="text-right font-bold border-t py-2">Costo de envío: {{ shipping_cost }} €</p>
+            <p class="text-right font-bold border-t py-2">Total con envío: {{ precio_total_con_envio }} €</p>
             {% if cart_items|length  > 0 %}
                 <a href="{% url 'checkout' %}" class="text-center text-xl font-awesome mt-1 bg-blue-500 text-white px-4 py-2 rounded">Comprar</a>
             {% endif %}
