@@ -1,4 +1,4 @@
-{% extends 'base.html'%}
+{% extends 'core/base.html'%}
 {% load static %}
 {% block title %} Orders {% endblock %}
 <head>
@@ -21,6 +21,7 @@
                     <th>Total</th>
                     <th>Precio Total con Envío</th>
                     <th>Opinión</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -44,7 +45,11 @@
                                         <p>No hay opiniones</p>
                                     {% endif %}
                                 </td>
+                                <td rowspan="{{ order.items.count }}">
+                                    <a href="{% url 'seguimiento_pedido' order.id %}">Ver seguimiento</a>
+                                </td>
                             {% endif %}
+                            
                         </tr>
                     {% endfor %}
                 {% endfor %}

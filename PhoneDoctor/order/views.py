@@ -59,7 +59,7 @@ def checkout(request):
                     #generar token unico para cada pedido: 
                     tracking = generate_unique_random_string()
 
-                    order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PAGADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
+                    order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
 
                     order.items.set([item for item in cart_items])
                     for item in cart_items:
@@ -74,7 +74,7 @@ def checkout(request):
                     tracking = generate_unique_random_string()
                     email = request.POST.get('email')
 
-                    order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PAGADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
+                    order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
 
                     order.items.set([item for item in cart_items])
                     for item in cart_items:
@@ -109,7 +109,7 @@ def checkout(request):
                     #generar token unico para cada pedido: 
                 tracking = generate_unique_random_string()
 
-                order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PAGADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
+                order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
 
                 order.items.set([item for item in cart_items])
                 for item in cart_items:
@@ -124,7 +124,7 @@ def checkout(request):
                 tracking = generate_unique_random_string()
                 email = request.POST.get('email')
 
-                order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PAGADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
+                order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
 
                 order.items.set([item for item in cart_items])
                 for item in cart_items:
@@ -243,3 +243,17 @@ def search_order(request):
         return render(request, 'seguimiento_pedido.html', {'order': order}) 
     else:
        return render(request, '404.html')
+    
+def marcar_enviado(request, order_id):
+    order = Order.objects.get(id=order_id)
+    order.status = Order.StatusChoices.ENVIADO
+    order.save()
+
+    return render(request,'seguimiento_pedido.html', {'order':order})
+
+def marcar_completado(request, order_id):
+    order = Order.objects.get(id=order_id)
+    order.status = Order.StatusChoices.COMPLETADO
+    order.save()
+
+    return render(request,'seguimiento_pedido.html', {'order':order})

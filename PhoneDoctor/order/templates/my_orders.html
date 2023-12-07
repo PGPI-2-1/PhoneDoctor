@@ -32,6 +32,9 @@
                         <div class="user-details">
                             <strong>Id de seguimiento:</strong> {{ order.id_tracking }}
                         </div>
+                        <div class="user-role">
+                            <a class="staff-label" href="{% url 'seguimiento_pedido' order.id %}">Seguimiento</a>
+                        </div>
                         {% if not order.review %}
                         <div class="user-role">
                             <a class="staff-label" href="{% url 'order_review' order.id %}">Añadir opinión</a>

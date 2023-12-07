@@ -45,7 +45,7 @@ class UserAdminViewTest(TestCase):
         )
 
         self.cartItem = CartItem.objects.create(user = self.normal_user, product = self.iphone_product, quantity = 1,  is_processed = True)
-        self.order = Order.objects.create(user = self.normal_user, address = "ETSII", email = self.normal_user.email, status = Order.StatusChoices.PAGADO, precio_total = 100., id_tracking = "ss1033fs")
+        self.order = Order.objects.create(user = self.normal_user, address = "ETSII", email = self.normal_user.email, status = Order.StatusChoices.PROCESADO, precio_total = 100., id_tracking = "ss1033fs")
         self.order.items.add(self.cartItem)
 
         self.client = Client()
