@@ -13,11 +13,11 @@
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
             <div class="mb-4">
-                {{ form.username.label_tag }}
+                <p>Correo electrónico:</p>
                 {% render_field form.username class="w-full bg-gray-100 border-2 border-blue-500 p-2 rounded" %}
             </div>
             <div class="mb-4">
-                {{ form.password.label_tag }}
+                <p>Contraseña:</p>
                 {% render_field form.password class="w-full bg-gray-100 border-2 border-blue-500 p-2 rounded" %}
             </div>
             <button type="submit" class="bg-blue-500 px-4 py-2 rounded text-white font-bold hover:bg-blue-600 transition">Iniciar sesión</button>
