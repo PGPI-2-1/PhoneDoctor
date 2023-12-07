@@ -39,21 +39,74 @@ def checkout(request):
     precio_total_con_envio = precio_total + shipping_cost
 
     if request.method == 'POST':
-        token = request.POST.get('stripeToken')
-        try:
-            charge = stripe.Charge.create(
-                amount=int(precio_total*100),
-                currency='eur',
-                description='Compra en PhoneDoctor',
-                source=token,
-            )
+        payment_option = request.POST.get('payment_option')
 
+        if payment_option == 'tarjeta_credito':
+            token = request.POST.get('stripeToken')
+            try:
+                charge = stripe.Charge.create(
+                    amount=int(precio_total*100),
+                    currency='eur',
+                    description='Compra en PhoneDoctor',
+                    source=token,
+                )
+
+                address = request.POST.get('address')
+
+                if request.user.is_authenticated:
+                    email = request.user.email
+
+                    #generar token unico para cada pedido: 
+                    tracking = generate_unique_random_string()
+
+                    order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PAGADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
+
+                    order.items.set([item for item in cart_items])
+                    for item in cart_items:
+                        producto=item.product
+                        cantidad_antigua=producto.quantity
+                        producto.quantity=cantidad_antigua-item.quantity
+                        producto.save()
+                    order.save()
+                    #enviar_correo(request,address,precio_total,cart_items,request.user.email)
+                else:
+                    #generar token unico para cada pedido: 
+                    tracking = generate_unique_random_string()
+                    email = request.POST.get('email')
+
+                    order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PAGADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
+
+                    order.items.set([item for item in cart_items])
+                    for item in cart_items:
+                        producto=item.product
+                        cantidad_antigua=producto.quantity
+                        producto.quantity=cantidad_antigua-item.quantity
+                        producto.save()
+                    order.save()
+                    #enviar_correo(request,address,precio_total,cart_items,email)
+
+                for cart_item in cart_items:
+                    cart_item.is_processed=True
+                    cart_item.save()
+
+                return redirect('/order/'+str(order.id)+'/')  
+
+
+            except stripe.error.CardError as e:
+                # Si hay un error con la tarjeta, maneja la excepción y muestra un mensaje al usuario
+                error_message = e.error.message
+                context = {
+                    'cart_items': cart_items,
+                    'precio_total': precio_total_con_envio,
+                    'shipping_cost': shipping_cost,
+                    'error_message': error_message,
+                }
+                return render(request, 'checkout.html', context)
+        elif payment_option == 'contra_reembolso':
             address = request.POST.get('address')
-
             if request.user.is_authenticated:
                 email = request.user.email
-
-                #generar token unico para cada pedido: 
+                    #generar token unico para cada pedido: 
                 tracking = generate_unique_random_string()
 
                 order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PAGADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
@@ -86,19 +139,7 @@ def checkout(request):
                 cart_item.is_processed=True
                 cart_item.save()
 
-            return redirect('/order/'+str(order.id)+'/')  
-
-
-        except stripe.error.CardError as e:
-            # Si hay un error con la tarjeta, maneja la excepción y muestra un mensaje al usuario
-            error_message = e.error.message
-            context = {
-                'cart_items': cart_items,
-                'precio_total': precio_total_con_envio,
-                'shipping_cost': shipping_cost,
-                'error_message': error_message,
-            }
-            return render(request, 'checkout.html', context)
+            return redirect('/order/'+str(order.id)+'/')
 
     context = {
     'cart_items': cart_items,

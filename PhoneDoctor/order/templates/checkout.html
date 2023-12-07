@@ -27,16 +27,28 @@
                     <input type="text" name="address" id="address" placeholder="Ingresa tu dirección" required
                         class="mt-1 p-2 w-full border rounded-md">
                 </div>
-                <!-- Agrega el elemento de tarjeta de Stripe -->
-                <div class="mb-4 felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
-                    <label for="card-element" class="block text-sm font-medium text-gray-700">Tarjeta de crédito o débito:</label>
-                    <div id="card-element" class="mt-1">
-                        <!-- Elemento de Stripe para la entrada de la tarjeta -->
-                    </div>
 
-                    <!-- Se mostrarán mensajes de error aquí -->
-                    <div id="card-errors" role="alert"></div>
+                <div class="mb-4 felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
+                    <label for="payment_option" class="block text-sm font-medium text-gray-700">Opción de pago:</label>
+                    <select name="payment_option" id="payment_option" class="mt-1 p-2 w-full border rounded-md" required>
+                        <option value="contra_reembolso">Pago contra reembolso</option>
+                        <option value="tarjeta_credito">Pagar ahora con tarjeta</option>
+                    </select>
                 </div>
+                
+                <!-- Agrega el elemento de tarjeta de Stripe -->
+
+                <div id="card-fields" style="display: none;">
+                    <div class="mb-4 felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
+                        <label for="card-element" class="block text-sm font-medium text-gray-700">Tarjeta de crédito o débito:</label>
+                        <div id="card-element" class="mt-1">
+                            <!-- Elemento de Stripe para la entrada de la tarjeta -->
+                        </div>
+
+                        <!-- Se mostrarán mensajes de error aquí -->
+                        <div id="card-errors" role="alert"></div>
+                    </div>
+                </form>
 
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Pagar</button>
             </form>
@@ -48,21 +60,33 @@
                     <input type="text" name="address" id="address" placeholder="Ingresa tu dirección" required
                         class="mt-1 p-2 w-full border rounded-md">
                 </div>
+
+                
                 <div class="mb-4 felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl" >
-                    <label for="email" class="block text-sm font-medium text-gray-700">Correo electrínico</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
                     <input type="text" name="email" id="email" placeholder="Ingresa tu correo electrónico" required
                         class="mt-1 p-2 w-full border rounded-md">
                 </div>
 
-                 <!-- Agrega el elemento de tarjeta de Stripe -->
                 <div class="mb-4 felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
-                    <label for="card-element" class="block text-sm font-medium text-gray-700">Tarjeta de crédito o débito:</label>
-                    <div id="card-element" class="mt-1">
-                        <!-- Elemento de Stripe para la entrada de la tarjeta -->
-                    </div>
+                    <label for="payment_option" class="block text-sm font-medium text-gray-700">Opción de pago:</label>
+                    <select name="payment_option" id="payment_option" class="mt-1 p-2 w-full border rounded-md" required>
+                        <option value="contra_reembolso">Pago contra reembolso</option>
+                        <option value="tarjeta_credito">Pagar ahora con tarjeta</option>
+                    </select>
+                </div>
 
-                    <!-- Se mostrarán mensajes de error aquí -->
-                    <div id="card-errors" role="alert"></div>
+                 <!-- Agrega el elemento de tarjeta de Stripe -->
+                <div id="card-fields" style="display: none;">
+                    <div class="mb-4 felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
+                        <label for="card-element" class="block text-sm font-medium text-gray-700">Tarjeta de crédito o débito:</label>
+                        <div id="card-element" class="mt-1">
+                            <!-- Elemento de Stripe para la entrada de la tarjeta -->
+                        </div>
+
+                        <!-- Se mostrarán mensajes de error aquí -->
+                        <div id="card-errors" role="alert"></div>
+                    </div>
                 </div>
 
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Pagar</button>
@@ -90,7 +114,28 @@
         });
 
         var form = document.getElementById('payment-form');
+        var paymentOptionSelect = document.getElementById('payment_option');
+        var cardFields = document.getElementById('card-fields');
+
+        paymentOptionSelect.addEventListener('change', function(event) {
+            var selectedOption = event.target.value;
+            console.log(selectedOption)
+
+            // Muestra u oculta los campos de tarjeta según la opción seleccionada
+            if (selectedOption === 'tarjeta_credito') {
+                cardFields.style.display = 'block';
+            } else {
+                cardFields.style.display = 'none';
+            }
+        });
+
+
+
         form.addEventListener('submit', function(event) {
+            if (paymentOptionSelect.value === 'contra_reembolso'){
+                return;
+            }
+            
             event.preventDefault();
 
             stripe.createToken(card).then(function(result) {
