@@ -38,8 +38,10 @@
                 </div>
             {% endfor %}
             <p class="text-right font-bold border-t py-2">Total: {{order.precio_total}} €</p>
-            <p class="text-xl font-awsome">Pedido enviado a: </p>
+            <p class="text-xl font-awsome">Domicilio: </p>
             <p>{{order.address}}</p>
+            <p class="text-xl font-awsome">El pedido se entregará en: </p>
+            <p>{{order.delivery_option|capfirst}}</p>
             <p class="text-xl font-awsome">Correo electrónico:  </p>
             <p>{{order.email}}</p>
             <p class="text-xl font-awsome">Id de seguimiento:  </p>

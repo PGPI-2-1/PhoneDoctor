@@ -21,6 +21,9 @@
                             <strong>Dirección:</strong> {{ order.address }}
                         </div>
                         <div class="user-details">
+                            <strong>Lugar de entrega:</strong> {{ order.delivery_option|capfirst }}
+                        </div>
+                        <div class="user-details">
                             <strong>Correo electrónico:</strong> {{ order.email }}
                         </div>
                         <div class="user-details">

@@ -21,6 +21,10 @@ class Order(models.Model):
         ENVIADO = 'enviado', 'Enviado'
         COMPLETADO = 'completado', 'Completado'
 
+    class DeliveryOptions(models.TextChoices):
+        DOMICILIO = 'Domicilio', 'Domicilio'
+        CORREOS = 'Correos', 'Correos'
+
     #products = models.ManyToManyField(Product, related_name='order_products')
     items = models.ManyToManyField(CartItem, related_name='order_items')
     user = models.ForeignKey(User, related_name='order_user', on_delete=models.CASCADE, null=True)
@@ -32,6 +36,7 @@ class Order(models.Model):
     id_tracking = models.CharField(max_length=10, default=None)
     shipping_cost = models.FloatField(default=10.0)
     precio_total = models.FloatField()
+    delivery_option = models.CharField(max_length=20, choices=DeliveryOptions.choices, default=DeliveryOptions.DOMICILIO)
 
     @property
     def total_price_with_shipping(self):
