@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+
+    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+        <div class="felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
+            <h2 class="text-2xl text-center font-bold mb-2">Gestionar Reclamacion</h2>
+            <h2 class="text text-center font-semibold mb-2">Estado actual: {{reclamacion.status}}</h2>
+            <form id="response-form" class="mt-4" method="post" action="{% url 'gestionar_reclamacion' reclamacion.id %}">
+                {% csrf_token %}
+                <div>
+                    <label for="mensaje" class="block text-sm font-medium text-gray-700">Respuesta:</label>
+                    <input type="text" name="mensaje" id="mensaje" placeholder="Texto"
+                        class="mt-1 p-2 w-full border rounded-md">
+                </div>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Enviar</button>
+            </form>
+        </div>
+
+    </div>
+    
+
+    <style>
+        .centered-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }   
+
+    </style>
+
+    <script>
+        var form = document.getElementById('response-form');
+
+        form.addEventListener('submit', function(event) {
+            form.submit();
+        });
+    </script>
+
+    
+{% endblock %}

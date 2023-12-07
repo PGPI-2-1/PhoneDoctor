@@ -38,7 +38,7 @@ class ReviewViewTest(TestCase):
             is_staff=False,
         )
         self.cartItem = CartItem.objects.create(user = self.normal_user, product = self.product, quantity = 1,  is_processed = True)
-        self.order = Order.objects.create(user = self.normal_user, address = "ETSII", email = self.normal_user.email, status = Order.StatusChoices.PAGADO, precio_total = 100., id_tracking = tracking)
+        self.order = Order.objects.create(user = self.normal_user, address = "ETSII", email = self.normal_user.email, status = Order.StatusChoices.PROCESADO, precio_total = 100., id_tracking = tracking)
         self.order.items.add(self.cartItem)
 
         self.client = Client()
@@ -161,8 +161,8 @@ class ReviewAdminViewTest(TestCase):
             is_staff=False,
         )
         self.cartItem = CartItem.objects.create(user = self.normal_user, product = self.product, quantity = 1,  is_processed = True)
-        self.order = Order.objects.create(user = self.normal_user, address = "ETSII", email = self.normal_user.email, status = Order.StatusChoices.PAGADO, precio_total = 100., id_tracking = tracking1)
-        self.order_no_review = Order.objects.create(user = self.normal_user, address = "ETSII", email = self.normal_user.email, status = Order.StatusChoices.PAGADO, precio_total = 100., id_tracking = tracking2)
+        self.order = Order.objects.create(user = self.normal_user, address = "ETSII", email = self.normal_user.email, status = Order.StatusChoices.PROCESADO, precio_total = 100., id_tracking = tracking1)
+        self.order_no_review = Order.objects.create(user = self.normal_user, address = "ETSII", email = self.normal_user.email, status = Order.StatusChoices.PROCESADO, precio_total = 100., id_tracking = tracking2)
 
         self.order.items.add(self.cartItem)
 
@@ -202,13 +202,13 @@ class OrderModelTest(TestCase):
         product = Product.objects.create(name='Test Product', price=10.0, brand=self.brand, category=self.category, quantity=5)
         cart_item = CartItem.objects.create(user=self.user, product=product, quantity=2, is_processed=False)
         
-        order = Order.objects.create(user=self.user, address='Test Address', email='test@example.com', status=Order.StatusChoices.PAGADO, precio_total=20.0, id_tracking = tracking)
+        order = Order.objects.create(user=self.user, address='Test Address', email='test@example.com', status=Order.StatusChoices.PROCESADO, precio_total=20.0, id_tracking = tracking)
         order.items.add(cart_item)
 
         self.assertEqual(order.user, self.user)
         self.assertEqual(order.address, 'Test Address')
         self.assertEqual(order.email, 'test@example.com')
-        self.assertEqual(order.status, Order.StatusChoices.PAGADO)
+        self.assertEqual(order.status, Order.StatusChoices.PROCESADO)
         self.assertEqual(order.precio_total, 20.0)
         self.assertEqual(order.items.count(), 1)
 
@@ -216,14 +216,14 @@ class OrderModelTest(TestCase):
         result = generate_unique_random_string()
         self.assertIsNotNone(result)
 
-        order = Order.objects.create(user=self.user, address='Test Address', email='test@example.com', status=Order.StatusChoices.PAGADO, precio_total=20.0, id_tracking = result)
+        order = Order.objects.create(user=self.user, address='Test Address', email='test@example.com', status=Order.StatusChoices.PROCESADO, precio_total=20.0, id_tracking = result)
         order.save()
 
         self.assertIsNotNone(Order.objects.filter(id_tracking=result))
 
     def test_search_order(self):
         result = generate_unique_random_string()
-        order = Order.objects.create(user=self.user, address='Test Address', email='test@example.com', status=Order.StatusChoices.PAGADO, precio_total=20.0, id_tracking=result)
+        order = Order.objects.create(user=self.user, address='Test Address', email='test@example.com', status=Order.StatusChoices.PROCESADO, precio_total=20.0, id_tracking=result)
         order.save()
 
         url = reverse('search_order') + f'?q={result}'
@@ -234,7 +234,7 @@ class OrderModelTest(TestCase):
     def test_bad_search_order(self):
         badresult = '37498274982379487'
         result = generate_unique_random_string()
-        order = Order.objects.create(user=self.user, address='Test Address', email='test@example.com', status=Order.StatusChoices.PAGADO, precio_total=20.0, id_tracking=result)
+        order = Order.objects.create(user=self.user, address='Test Address', email='test@example.com', status=Order.StatusChoices.PROCESADO, precio_total=20.0, id_tracking=result)
         order.save()
 
         url = reverse('search_order') + f'?q={badresult}'

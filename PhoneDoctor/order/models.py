@@ -17,7 +17,7 @@ class Review(models.Model):
 
 class Order(models.Model):
     class StatusChoices(models.TextChoices):
-        PAGADO = 'pagado', 'Pagado'
+        PROCESADO = 'procesado', 'Procesado'
         ENVIADO = 'enviado', 'Enviado'
         COMPLETADO = 'completado', 'Completado'
 

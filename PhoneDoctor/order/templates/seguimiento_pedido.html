@@ -7,18 +7,25 @@
         <div class="felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
             <h2 class="text-2xl text-center font-bold mb-2">Seguimiento del Pedido</h2>
             <h2 class="text text-center font-semibold mb-2">Estado actual: {{order.status}}</h2>
-            <div class="progress-bar">
-                <div class="progress-step {% if order.status == 'pagado' %}active{% endif %}">
-                    <span>Pagado</span>
+            <div class="progress-bar mb-4">
+                <div class="progress-step {% if order.status == 'procesado' or order.status == 'enviado' or order.status == 'completado' %}active{% endif %}">
+                    <span>Procesado</span>
                 </div>
-                <div class="progress-step {% if order.status == 'enviado' %}active{% endif %}">
+                <div class="progress-step {% if order.status == 'enviado' or order.status == 'completado' %}active{% endif %}">
                     <span>Enviado</span>
                 </div>
                 <div class="progress-step {% if order.status == 'completado' %}active{% endif %}">
                     <span>Completado</span>
                 </div>
             </div>
+            {% if user.is_staff %}
+            <div class="centered-container">
+                <a href = "{% url 'marcar_enviado' order.id %}" class="bg-blue-500 text-white px-4 py-2 rounded">Marcar como enviado</a>
+                <a href = "{% url 'marcar_completado' order.id %}" class="bg-blue-500 text-white px-4 py-2 rounded">Marcar como completado</a>
+            </div>
+            {% endif %}
         </div>
+
     </div>
     
     <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
@@ -72,6 +79,11 @@
             transform: translateY(50%);
             left: 0;
         }
+        .centered-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }   
 
     </style>
 
