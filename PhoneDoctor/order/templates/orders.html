@@ -15,6 +15,7 @@
                 <tr>
                     <th>Usuario</th>
                     <th>Dirección</th>
+                    <th>Lugar de entrega</th>
                     <th>Estado del Pedido</th>
                     <th>Producto</th>
                     <th>Cantidad</th>
@@ -30,7 +31,8 @@
                             {% if forloop.first %}
                                 <td rowspan="{{ order.items.count }}">{{ order.email }}</td>
                                 <td rowspan="{{ order.items.count }}">{{ order.address }}</td>
-                                <td rowspan="{{ order.items.count }}">{{ order.status }}</td>
+                                <td rowspan="{{ order.items.count }}">{{ order.delivery_option|capfirst }}</td>
+                                <td rowspan="{{ order.items.count }}">{{ order.status|capfirst }}</td>
                             {% endif %}
                             <td>{{ item.product.name }} ({{ item.product.price }}€)</td>
                             <td>{{ item.quantity }}</td>
@@ -39,7 +41,7 @@
                                 <td rowspan="{{ order.items.count }}">{{ order.total_price_with_shipping }}€</td>
                                 <td rowspan="{{ order.items.count }}">
                                     {% if order.review.id %}
-                                        <a class="staff-label" href="/user/order/{{order.id}}/review">Ver Opiniones</a>
+                                    <a class="staff-label" href="/user/order/{{order.id}}/review" style="text-decoration: underline; color: #0066cc; cursor: pointer;">Ver Opiniones</a>
                                     {% else %}
                                         <p>No hay opiniones</p>
                                     {% endif %}

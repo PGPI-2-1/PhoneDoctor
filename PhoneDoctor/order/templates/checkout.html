@@ -27,6 +27,14 @@
                     <input type="text" name="address" id="address" placeholder="Ingresa tu dirección" required
                         class="mt-1 p-2 w-full border rounded-md">
                 </div>
+                <div class="mb-4 flex flex-col justify-between block mt-2 p-4 bg-white rounded-xl">
+                    <label for="delivery_option" class="block text-sm font-medium text-gray-700">Opción de entrega</label>
+                    <select name="delivery_option" id="delivery_option" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                        <option value="domicilio" {% if order.delivery_option == 'domicilio' %}selected{% endif %}>Domicilio</option>
+                        <option value="correos" {% if order.delivery_option == 'correos' %}selected{% endif %}>Correos</option> 
+                    </select>
+                </div>
+                
                 <!-- Agrega el elemento de tarjeta de Stripe -->
                 <div class="mb-4 felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
                     <label for="card-element" class="block text-sm font-medium text-gray-700">Tarjeta de crédito o débito:</label>
