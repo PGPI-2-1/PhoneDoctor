@@ -27,7 +27,7 @@ def add_to_cart(request, product_id):
         cart_item.delete()
         request.session['cantidad_superada'] = "No quedan tantas unidades de este producto"
     
-    return redirect("/")
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
 
