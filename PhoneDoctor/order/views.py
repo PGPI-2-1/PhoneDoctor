@@ -170,6 +170,23 @@ def seguimiento_pedido(request,order_id):
 def my_orders(request):
     orders = Order.objects.filter(user=request.user.id)
 
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        new_delivery_option = request.POST.get('new_delivery_option')
+
+        order = Order.objects.get(id=order_id)
+
+        if order.status == Order.StatusChoices.PROCESADO:
+            new_address = request.POST.get('new_address')
+            if new_address:
+                order.address = new_address
+        order.delivery_option = new_delivery_option
+
+            #Si estoy domicilio y quiero cambiar a correos y también la dirección, la dirección no se cambia.
+
+        order.save()
+
+
     return render(request, 'my_orders.html' , {'orders': orders})
 
 
