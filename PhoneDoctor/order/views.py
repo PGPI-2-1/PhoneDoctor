@@ -9,6 +9,11 @@ import secrets
 from .models import Review
 from django.contrib.auth.decorators import user_passes_test
 import stripe
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from django.http import HttpResponseForbidden
+
+
 
 stripe.api_key = "sk_test_51OHPZ9JkuoHLkF3tWqXW9fp8DYhNOJS52uFwcaWmwiIxX5uL7DjU8nWx4mqyvVZsqLBPFFwXFxVdLSKT71O5c1JV00DuU1Cp7O"
 
@@ -60,7 +65,7 @@ def checkout(request):
                     #generar token unico para cada pedido: 
                     tracking = generate_unique_random_string()
 
-                    order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking, delivery_option=delivery_option)
+                    order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking, delivery_option=delivery_option,payment_option=Order.PaymentOptions.TARJETA)
 
                     order.items.set([item for item in cart_items])
                     for item in cart_items:
@@ -75,7 +80,7 @@ def checkout(request):
                     tracking = generate_unique_random_string()
                     email = request.POST.get('email')
 
-                    order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking, delivery_option=delivery_option)
+                    order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking, delivery_option=delivery_option, payment_option=Order.PaymentOptions.TARJETA)
 
                     order.items.set([item for item in cart_items])
                     for item in cart_items:
@@ -111,7 +116,7 @@ def checkout(request):
                     #generar token unico para cada pedido: 
                 tracking = generate_unique_random_string()
 
-                order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking, delivery_option=delivery_option)
+                order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking, delivery_option=delivery_option, payment_option=Order.PaymentOptions.CONTRA_REEMBOLSO)
 
                 order.items.set([item for item in cart_items])
                 for item in cart_items:
@@ -126,7 +131,7 @@ def checkout(request):
                 tracking = generate_unique_random_string()
                 email = request.POST.get('email')
 
-                order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking, delivery_option=delivery_option)
+                order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking, delivery_option=delivery_option, payment_option=Order.PaymentOptions.CONTRA_REEMBOLSO)
 
                 order.items.set([item for item in cart_items])
                 for item in cart_items:
@@ -170,7 +175,86 @@ def seguimiento_pedido(request,order_id):
 def my_orders(request):
     orders = Order.objects.filter(user=request.user.id)
 
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        new_delivery_option = request.POST.get('new_delivery_option')
+        payment_option = request.POST.get('payment_option')
+
+        order = Order.objects.get(id=order_id)
+
+        if order.status == Order.StatusChoices.PROCESADO:
+            new_address = request.POST.get('new_address')
+            if new_address:
+                order.address = new_address
+            order.delivery_option = new_delivery_option
+
+            if payment_option == 'tarjeta':
+                token = request.POST.get('stripeToken')
+                try:
+                    charge = stripe.Charge.create(
+                        amount=int(order.precio_total * 100),
+                        currency='eur',
+                        description='Pago de pedido',
+                        source=token,
+                    )
+
+                    order.status = Order.StatusChoices.PAGO_COMPLETADO
+                    order.payment_option = 'tarjeta'
+                    order.save()
+
+                    # Realizar las acciones necesarias después de un pago exitoso, si es necesario
+
+                except stripe.error.CardError as e:
+                    # Manejar errores de tarjeta, puedes mostrar un mensaje al usuario o realizar otras acciones
+                    error_message = e.error.message
+                    context = {
+                        'orders': orders,
+                        'error_message': error_message,
+                    }
+                    return render(request, 'my_orders.html', context)
+
+            # Resto de la lógica para cambiar la dirección y la opción de entrega
+
+            order.save()
+
     return render(request, 'my_orders.html' , {'orders': orders})
+
+def change_payment(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    # Comprobar si el método de pago es 'contra reembolso'
+    if order.payment_option != 'contra_reembolso':
+        return HttpResponseForbidden("No puedes cambiar el método de pago para este pedido.")
+
+    if request.method == 'POST':
+        token = request.POST.get('stripeToken')
+        try:
+            charge = stripe.Charge.create(
+                amount=int(order.precio_total * 100),
+                currency='eur',
+                description='Pago de pedido',
+                source=token,
+            )
+
+            order.payment_option = 'tarjeta'
+            order.save()
+
+            # Realizar las acciones necesarias después de un pago exitoso, si es necesario
+
+        except stripe.error.CardError as e:
+            # Manejar errores de tarjeta, puedes mostrar un mensaje al usuario o realizar otras acciones
+            error_message = e.error.message
+            context = {
+                'order': order,
+                'error_message': error_message,
+            }
+            return render(request, 'change_payment.html', context)
+
+        # Redirigir a la vista de los pedidos después de realizar el pago
+        return redirect('my_orders')
+
+    # Si el método de la solicitud no es 'POST', renderizar la plantilla 'change_payment.html'
+    return render(request, 'change_payment.html', {'order': order})
 
 
 def order_review(request, order_id):

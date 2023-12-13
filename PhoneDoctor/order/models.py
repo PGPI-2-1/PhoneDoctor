@@ -25,6 +25,12 @@ class Order(models.Model):
         DOMICILIO = 'Domicilio', 'Domicilio'
         CORREOS = 'Correos', 'Correos'
 
+    class PaymentOptions(models.TextChoices):
+        CONTRA_REEMBOLSO = 'contra_reembolso', 'Contra reembolso'
+        TARJETA = 'tarjeta', 'Tarjeta'
+
+
+    #products = models.ManyToManyField(Product, related_name='order_products')
     items = models.ManyToManyField(CartItem, related_name='order_items')
     user = models.ForeignKey(User, related_name='order_user', on_delete=models.CASCADE, null=True)
     review = models.OneToOneField(Review, related_name='order_review', on_delete=models.CASCADE, null=True)
@@ -36,6 +42,7 @@ class Order(models.Model):
     shipping_cost = models.FloatField(default=10.0)
     precio_total = models.FloatField()
     delivery_option = models.CharField(max_length=20, choices=DeliveryOptions.choices, default=DeliveryOptions.DOMICILIO)
+    payment_option = models.CharField(max_length=20, choices=PaymentOptions.choices, default=PaymentOptions.CONTRA_REEMBOLSO)
 
     @property
     def total_price_with_shipping(self):
