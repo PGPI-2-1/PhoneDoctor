@@ -4,6 +4,8 @@ from django.http import HttpResponseForbidden
 from django.template import loader
 from .models import Product
 from django.urls import reverse
+from shoppingCart.models import CartItem
+from core.views import calcular_total
 
 
 # Create your views here.
@@ -115,10 +117,23 @@ def edit(request, pk):
 
 def product_info(request, pk):
     try:
+        mensaje=""
+        mensaje_cantidad=""
         product = Product.objects.get(pk=pk)
+        shoppingCarts = CartItem.objects.filter(user_id=request.user.id, is_processed=False)
+        if 'carrito_vacio' in request.session:
+            mensaje=request.session.pop('carrito_vacio',None)
+
+        if 'cantidad_superada' in request.session:
+            mensaje_cantidad=request.session.pop('cantidad_superada',None)
+        total = calcular_total(shoppingCarts)
     except Product.DoesNotExist:
         return render(request, 'product/404.html', {})
 
     return render(request, 'product/info.html', {
-        'product': product
+        'product': product,
+        'cart_items':shoppingCarts,
+        'precio_total':total,
+        'mensaje':mensaje,
+        'mensaje_cantidad':mensaje_cantidad,
     })
