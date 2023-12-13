@@ -162,7 +162,7 @@ def enviar_correo(request, address, precio_total, cart_items, email):
     subject = 'Confirmación de Pedido'
     message = render_to_string('email/order_confirmation.html', {'email':email,'address': address, 'precio_total':precio_total, 'cart_items':cart_items})
     plain_message = strip_tags(message)
-    from_email = 'phonedoctorPGPI@outlook.es' 
+    from_email = 'phonedoctorpgpi@gmail.com' 
     to_email = [email] 
 
     send_mail(subject, plain_message, from_email, to_email, html_message=message)

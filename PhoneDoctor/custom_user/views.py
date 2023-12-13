@@ -82,7 +82,7 @@ def enviar_correo(request, mensaje, email, descripcion, estado):
     subject = 'Gestión de Reclamación'
     message = render_to_string('email/gestionar_reclamacion.html', {'email':email, 'mensaje':mensaje, 'descripcion':descripcion, 'estado': estado})
     plain_message = strip_tags(message)
-    from_email = 'phonedoctorPGPI@outlook.es' 
+    from_email = 'phonedoctorpgpi@gmail.com' 
     to_email = [email] 
 
     send_mail(subject, plain_message, from_email, to_email, html_message=message)
