@@ -30,7 +30,15 @@
                             <strong>Precio total:</strong> {{ order.precio_total }}€
                         </div>
                         <div class="user-details">
-                            {{ order.status|capfirst }}
+                            <strong>Estado:</strong> {{ order.status|capfirst }}
+                        </div>
+                        <div class="user-details">
+                            <strong>Opción de pago:</strong> 
+                            {% if order.payment_option == 'contra_reembolso' %}
+                                Contra reembolso
+                            {% else %}
+                                {{ order.payment_option|capfirst }}
+                            {% endif %}
                         </div>
                         <div class="user-details">
                             <strong>Id de seguimiento:</strong> {{ order.id_tracking }}
@@ -66,9 +74,15 @@
                                             <button type="submit" class="button-style" >Guardar Cambios</button>
                                         </div>
                                     </div>
+
+                                    {% if order.get_payment_option_display == 'Contra reembolso' %}
+                                    <button type="button" class="button-style" onclick="location.href='{% url 'change_payment' order.id %}'">Cambiar método de pago</button>
+                                    {% endif %}
+
                                 </form>
                                 {% endif %}
                             </div>
+
                             <div class="user-links">
                                 <a class="staff-label" href="{% url 'seguimiento_pedido' order.id %}">Seguimiento</a>
                                 {% if not order.review %}
@@ -95,7 +109,39 @@
         </div>
     </div>
 </div>
+<script src="https://js.stripe.com/v3/"></script>
 
+<script>
+    var stripe = Stripe('pk_test_51OHPZ9JkuoHLkF3tZ5PofQvdPuAEltDJfkxabiakZc3ERBmEmrIUTUtMpOjo1QFGaR4WK6Wla9tZpHLO4EPo8mMj00KSI7b9BD');
+
+    {% for order in orders %}
+    var cardFields = document.getElementById('card-fields-{{ order.id }}');
+    if (cardFields) {
+        var elements = stripe.elements();
+        let card = elements.create('card');
+        card.mount('#card-element-{{ order.id }}');
+
+        card.addEventListener('change', function(event) {
+            let displayError = document.getElementById('card-errors-{{ order.id }}');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        if (cardFields.dataset.paymentOption == 'Contra reembolso') {
+            cardFields.style.display = 'block';
+        }
+
+        cardFields.querySelector('button[type="submit"]').addEventListener('click', function(event) {
+            if (cardFields.querySelector('#confirm-payment-{{ order.id }}').checked) {
+                cardFields.querySelector('#payment-option-{{ order.id }}').value = 'tarjeta';
+            }
+        });
+    }
+{% endfor %}
+</script>
 <style>
     body {
         font-family: 'Arial', sans-serif;
@@ -139,6 +185,10 @@
         padding: 4px 8px;
         border-radius: 4px;
         text-transform: uppercase;
+    }
+
+    .user-links{
+        margin-top: 10px;
     }
 
     .staff-label {
@@ -186,7 +236,7 @@
         margin-bottom: 10px;
     }
 
-    .change-address-fields button {
+    .button-style {
         background-color: #4CAF50;
         color: #fff;
         padding: 8px 12px;

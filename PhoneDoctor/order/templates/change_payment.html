@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+
+{% block title %} Cambiar método de pago {% endblock %}
+
+{% block content %}
+    <h1>Cambiar método de pago para el pedido con id: {{ order.id }}</h1>
+
+    <form action="{% url 'change_payment' order.id %}" method="post" id="payment-form">
+        {% csrf_token %}
+        <div class="form-row mb-4 felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
+            <label for="card-element" class="block text-sm font-medium text-gray-700">
+                Tarjeta de crédito o débito
+            </label>
+            <div id="card-element" class="mt-1">
+                <!-- Un campo de Stripe Element se mostrará aquí. -->
+            </div>
+
+            <!-- Usaremos esto para mostrar mensajes de error al cliente. -->
+            <div id="card-errors" role="alert"></div>
+        </div>
+
+        <button class="bg-blue-500 text-white px-4 py-2 rounded" type="submit">Pagar</button>
+    </form>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        var stripe = Stripe('pk_test_51OHPZ9JkuoHLkF3tZ5PofQvdPuAEltDJfkxabiakZc3ERBmEmrIUTUtMpOjo1QFGaR4WK6Wla9tZpHLO4EPo8mMj00KSI7b9BD');
+        var elements = stripe.elements();
+        var card = elements.create('card');
+        card.mount('#card-element');
+
+        card.addEventListener('change', function(event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            stripe.createToken(card).then(function(result) {
+                if (result.error) {
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    stripeTokenHandler(result.token);
+                }
+            });
+        });
+
+        function stripeTokenHandler(token) {
+            var form = document.getElementById('payment-form');
+            var hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'stripeToken');
+            hiddenInput.setAttribute('value', token.id);
+            form.appendChild(hiddenInput);
+
+            form.submit();
+        }
+    </script>
+{% endblock %}

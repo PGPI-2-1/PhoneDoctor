@@ -40,7 +40,7 @@
                     <label for="payment_option" class="block text-sm font-medium text-gray-700">Opción de pago:</label>
                     <select name="payment_option" id="payment_option" class="mt-1 p-2 w-full border rounded-md" required>
                         <option value="contra_reembolso">Pago contra reembolso</option>
-                        <option value="tarjeta_credito">Pagar ahora con tarjeta</option>
+                        <option value="tarjeta_credito">Pagar con tarjeta</option>
                     </select>
                 </div>
                 
@@ -86,8 +86,8 @@
                 <div class="mb-4 felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl">
                     <label for="payment_option" class="block text-sm font-medium text-gray-700">Opción de pago:</label>
                     <select name="payment_option" id="payment_option" class="mt-1 p-2 w-full border rounded-md" required>
-                        <option value="contra_reembolso">Pago contra reembolso</option>
-                        <option value="tarjeta_credito">Pagar ahora con tarjeta</option>
+                        <option value="contra_reembolso" {% if order.payment_option == 'contra_reembolso' %}selected{% endif %}>Pago contra reembolso</option>
+                        <option value="tarjeta" {% if order.payment_option == 'tarjeta' %}selected{% endif %}>Pagar con tarjeta</option>
                     </select>
                 </div>
 

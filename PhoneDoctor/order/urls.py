@@ -12,4 +12,5 @@ urlpatterns = [
     path('search_order', views.search_order, name='search_order'),
     path('marcar_enviado/<int:order_id>', marcar_enviado, name='marcar_enviado'),
     path('marcar_completado/<int:order_id>', marcar_completado, name='marcar_completado'),
+    path('change_payment/<int:order_id>', views.change_payment, name='change_payment'),
 ]
