@@ -81,11 +81,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'PhoneDoctor.wsgi.application'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.office365.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'phonedoctorPGPI@outlook.es'
-EMAIL_HOST_PASSWORD = 'PGPI2023'
+EMAIL_HOST_USER = 'phonedoctorpgpi@gmail.com'
+EMAIL_HOST_PASSWORD = 'qsld ftwl epjn pxmc '
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
