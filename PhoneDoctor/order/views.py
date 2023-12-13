@@ -42,6 +42,7 @@ def checkout(request):
         payment_option = request.POST.get('payment_option')
 
         if payment_option == 'tarjeta_credito':
+            delivery_option = request.POST.get('delivery_option')
             token = request.POST.get('stripeToken')
             try:
                 charge = stripe.Charge.create(
@@ -59,7 +60,7 @@ def checkout(request):
                     #generar token unico para cada pedido: 
                     tracking = generate_unique_random_string()
 
-                    order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
+                    order = Order.objects.create(user=request.user, address=address, email=email,status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking, delivery_option=delivery_option)
 
                     order.items.set([item for item in cart_items])
                     for item in cart_items:
@@ -74,7 +75,7 @@ def checkout(request):
                     tracking = generate_unique_random_string()
                     email = request.POST.get('email')
 
-                    order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking)
+                    order = Order.objects.create(user=None, address=address, email=email, status=Order.StatusChoices.PROCESADO, precio_total=precio_total, shipping_cost=shipping_cost, id_tracking = tracking, delivery_option=delivery_option)
 
                     order.items.set([item for item in cart_items])
                     for item in cart_items:

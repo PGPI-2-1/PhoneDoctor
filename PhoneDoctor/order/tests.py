@@ -243,36 +243,74 @@ class OrderModelTest(TestCase):
         self.assertTemplateUsed(response, '404.html')
 
 
-# class OrderViewTest(TestCase):
-#     def setUp(self):
-#         self.client = Client()
-#         self.user = get_user_model().objects.create_user(email='testuser@example.com', password='testpassword')
-#         self.category = Category.objects.create(name='Test Category')
-#         self.brand = Brand.objects.create(name='Test Brand')
+class OrderViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = get_user_model().objects.create_user(email='testuser@example.com', password='testpassword')
+        self.category = Category.objects.create(name='Test Category')
+        self.brand = Brand.objects.create(name='Test Brand')
 
-#     def test_checkout_authenticated_user(self):
-#         product = Product.objects.create(name='Test Product', price=10.0, brand=self.brand, category=self.category, quantity=5)
-#         cart_item = CartItem.objects.create(user=self.user, product=product, quantity=2, is_processed=False)
-        
-#         self.client.login(email='testuser@example.com', password='testpassword')
-#         response = self.client.post(reverse('checkout'), {'address': 'Test Address'})
-        
-#         self.assertEqual(response.status_code, 302) 
+    def test_checkout_authenticated_user_cash(self):
+        product = Product.objects.create(name='Test Product', price=10.0, brand=self.brand, category=self.category, quantity=5)
+        cart_item = CartItem.objects.create(user=self.user, product=product, quantity=2, is_processed=False)
+       
+        self.client.login(email='testuser@example.com', password='testpassword')
+        response = self.client.post(reverse('checkout'), {'address': 'Test Address', 'payment_option': 'contra_reembolso', 'delivery_option': Order.DeliveryOptions.CORREOS})
+       
+        self.assertEqual(response.status_code, 302) 
+        order = Order.objects.get(user=self.user)
+        self.assertIsNotNone(order)
+        self.assertEqual(order.items.count(), 1)
+        self.assertTrue(all(cart_item.is_processed for cart_item in CartItem.objects.filter(user=self.user)))
 
-#         order = Order.objects.get(user=self.user)
-#         self.assertIsNotNone(order)
-#         self.assertEqual(order.items.count(), 1)
-#         self.assertTrue(all(cart_item.is_processed for cart_item in CartItem.objects.filter(user=self.user)))
+    def test_checkout_unauthenticated_user_cash(self):
+        product = Product.objects.create(name='Test Product', price=10.0, brand=self.brand, category=self.category, quantity=5)
+        cart_item = CartItem.objects.create(user=None, product=product, quantity=2, is_processed=False)
 
-#     def test_checkout_unauthenticated_user(self):
-#         product = Product.objects.create(name='Test Product', price=10.0, brand=self.brand, category=self.category, quantity=5)
-#         cart_item = CartItem.objects.create(user=None, product=product, quantity=2, is_processed=False)
+        response = self.client.post(reverse('checkout'), {'address': 'Test Address', 'email': 'test@example.com', 'delivery_option': Order.DeliveryOptions.DOMICILIO, 'payment_option': 'contra_reembolso'})
+       
+        self.assertEqual(response.status_code, 302)
 
-#         response = self.client.post(reverse('checkout'), {'address': 'Test Address', 'email': 'test@example.com'})
-        
-#         self.assertEqual(response.status_code, 302)
+        order = Order.objects.get(user=None)
+        self.assertIsNotNone(order)
+        self.assertEqual(order.items.count(), 1)
+        self.assertTrue(all(cart_item.is_processed for cart_item in CartItem.objects.filter(user=None)))
 
-#         order = Order.objects.get(user=None)
-#         self.assertIsNotNone(order)
-#         self.assertEqual(order.items.count(), 1)
-#         self.assertTrue(all(cart_item.is_processed for cart_item in CartItem.objects.filter(user=None)))
+    def test_checkout_authenticated_user_credit_card(self):
+        product = Product.objects.create(name='Test Product', price=10.0, brand=self.brand, category=self.category, quantity=5)
+        cart_item = CartItem.objects.create(user=self.user, product=product, quantity=2, is_processed=False)
+       
+        self.client.login(email='testuser@example.com', password='testpassword')
+        response = self.client.post(reverse('checkout'), {'address': 'Test Address', 'payment_option': 'tarjeta_credito', 'delivery_option': Order.DeliveryOptions.CORREOS, 'stripeToken': 'tok_visa'})
+       
+        self.assertEqual(response.status_code, 302) 
+        order = Order.objects.get(user=self.user)
+        self.assertIsNotNone(order)
+        self.assertEqual(order.items.count(), 1)
+        self.assertTrue(all(cart_item.is_processed for cart_item in CartItem.objects.filter(user=self.user)))
+
+    def test_checkout_unauthenticated_user_credit_card(self):
+        product = Product.objects.create(name='Test Product', price=10.0, brand=self.brand, category=self.category, quantity=5)
+        cart_item = CartItem.objects.create(user=None, product=product, quantity=2, is_processed=False)
+
+        response = self.client.post(reverse('checkout'), {'address': 'Test Address', 'email': 'test@example.com', 'delivery_option': Order.DeliveryOptions.DOMICILIO, 'payment_option': 'contra_reembolso', 'stripeToken': 'tok_visa'})
+       
+        self.assertEqual(response.status_code, 302)
+
+        order = Order.objects.get(user=None)
+        self.assertIsNotNone(order)
+        self.assertEqual(order.items.count(), 1)
+        self.assertTrue(all(cart_item.is_processed for cart_item in CartItem.objects.filter(user=None)))
+
+    def test_checkout_empty_values(self):
+        product = Product.objects.create(name='Test Product', price=10.0, brand=self.brand, category=self.category, quantity=5)
+        cart_item = CartItem.objects.create(user=None, product=product, quantity=2, is_processed=False)
+
+        response = self.client.post(reverse('checkout'))
+       
+        self.assertEqual(response.status_code, 200)
+
+        order = Order.objects.filter(user=None).first()
+        self.assertIsNone(order)
+
+    
