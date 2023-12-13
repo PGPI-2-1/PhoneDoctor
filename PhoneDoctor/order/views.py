@@ -46,7 +46,7 @@ def checkout(request):
     if request.method == 'POST':
         payment_option = request.POST.get('payment_option')
 
-        if payment_option == 'tarjeta_credito':
+        if payment_option == 'tarjeta':
             delivery_option = request.POST.get('delivery_option')
             token = request.POST.get('stripeToken')
             try:
