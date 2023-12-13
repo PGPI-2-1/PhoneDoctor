@@ -25,7 +25,6 @@ class Order(models.Model):
         DOMICILIO = 'Domicilio', 'Domicilio'
         CORREOS = 'Correos', 'Correos'
 
-    #products = models.ManyToManyField(Product, related_name='order_products')
     items = models.ManyToManyField(CartItem, related_name='order_items')
     user = models.ForeignKey(User, related_name='order_user', on_delete=models.CASCADE, null=True)
     review = models.OneToOneField(Review, related_name='order_review', on_delete=models.CASCADE, null=True)

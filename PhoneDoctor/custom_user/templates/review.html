@@ -7,7 +7,7 @@
     <div class="col-span-3">
         <div class="mt-6 px-6 py-12 rounded-xl">
             <div class="user-list">
-                <h2 class="mb-8 text-2xl text-center">Opinión</h2>
+                <h2 class="mb-8 text-2xl text-center">Reclamación</h2>
                 <div class="user-details">
                     <strong>Título: </strong>{{ review.title }}
                 </div>
@@ -20,13 +20,18 @@
                 <div style="text-align: right;">
                 <form method="post" action="{% url 'order_review_admin' order.id %}" enctype="multipart/form-data">
                     {% csrf_token %}
+                    <div>
+                        <label for="mensaje" class="block text-sm font-medium text-gray-700 text-left">Respuesta:</label>
+                        <input type="text" name="mensaje" id="mensaje" placeholder="Texto"
+                            class="mt-1 p-2 w-full border rounded-md">
+                    </div>
                     <strong for="id_is_accepted">Cambiar Estado:</strong>
                     <select name="is_accepted" id="id_is_accepted">
                         <option value="aceptado">Aceptado</option>
                         <option value="rechazado">Rechazado</option>
                         <option value="pendiente">Pendiente</option>
                     </select>
-                    <button class="ml-2 py-1 px-1 text-lg bg-blue-500 hover:bg-teal-700 rounded-xl text-white">Guardar</button>
+                    <button type="submit" class="ml-2 py-1 px-1 text-lg bg-blue-500 hover:bg-teal-700 rounded-xl text-white">Enviar</button>
                 </form>
             </div>
             </div>
