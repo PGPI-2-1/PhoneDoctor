@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'product',
     'shoppingCart',
     'order',
-    'reclamacion',
 ]
 
 AUTH_USER_MODEL = 'custom_user.User'

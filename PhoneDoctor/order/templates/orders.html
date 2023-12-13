@@ -21,7 +21,7 @@
                     <th>Cantidad</th>
                     <th>Total</th>
                     <th>Precio Total con Envío</th>
-                    <th>Opinión</th>
+                    <th>Reclamación</th>
                     <th>Seguimiento</th>
                 </tr>
             </thead>
@@ -42,9 +42,9 @@
                                 <td rowspan="{{ order.items.count }}">{{ order.total_price_with_shipping }}€</td>
                                 <td rowspan="{{ order.items.count }}">
                                     {% if order.review.id %}
-                                    <a class="staff-label" href="/user/order/{{order.id}}/review" style="text-decoration: underline; color: #0066cc; cursor: pointer;">Ver Opiniones</a>
+                                    <a class="staff-label" href="/user/order/{{order.id}}/review" style="text-decoration: underline; color: #0066cc; cursor: pointer;">Ver Reclamaciones</a>
                                     {% else %}
-                                        <p>No hay opiniones</p>
+                                        <p>No hay reclamaciones</p>
                                     {% endif %}
                                 </td>
                                 <td rowspan="{{ order.items.count }}">
