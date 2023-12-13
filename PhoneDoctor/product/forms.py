@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product,Brand,Category
+from .models import Product,Brand,Category, Opinion
 
 INPUT_CLASSES = 'w-full py-4 px-6 rounded-xl border'
 
@@ -106,4 +106,23 @@ class EditProductForm(forms.ModelForm):
             'price': 'Precio:',
             'image': 'Imagen:',
             'quantity': 'Cantidad:',
+        }
+
+class NewOpinionForm(forms.ModelForm):
+    class Meta:
+        model = Opinion
+        fields = ('valoracion','description')
+
+        widgets = {
+            'valoracion': forms.NumberInput(attrs={
+                'class': INPUT_CLASSES
+            }),
+            'description': forms.Textarea(attrs={
+                'class': INPUT_CLASSES
+            }),
+        }
+
+        labels = {
+            'valoracion': 'Valoración:',
+            'description': 'Descripción:',
         }

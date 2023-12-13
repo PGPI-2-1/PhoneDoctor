@@ -14,7 +14,12 @@
                         <div class="user-details">
                             <strong>Productos:</strong>
                             {% for item in order.items.all %}
-                            <p>- {{ item.quantity }}x {{ item.product.name }}</p>
+                                <p>- {{ item.quantity }}x {{ item.product.name }} </p>
+                                {% if order.status == 'completado' %}
+                                    <div class="user-role">
+                                        <a class="staff-label" href="{% url 'nueva_opinion' item.product.id %}">Añadir opinión</a>
+                                    </div>
+                                {% endif %}
                             {% endfor %}
                         </div>
                         <div class="user-details">
