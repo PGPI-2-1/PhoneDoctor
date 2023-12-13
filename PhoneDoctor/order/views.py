@@ -277,7 +277,7 @@ def order_review(request, order_id):
 
     return render(request, 'form.html', {
         'form': form,
-        'title': 'Nueva opinión',
+        'title': 'Nueva Reclamación',
         'order': order,
     })
 

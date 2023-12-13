@@ -23,7 +23,7 @@
             <form id="payment-form" class="mt-4" method="post" action="{% url 'checkout' %}">
                 {% csrf_token %}
                 <div class="mb-4 felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl" >
-                    <label for="address" class="block text-sm font-medium text-gray-700">Dirección de entrega:</label>
+                    <label for="address" class="block text-sm font-medium text-gray-700">Dirección de domicilio:</label>
                     <input type="text" name="address" id="address" placeholder="Ingresa tu dirección" required
                         class="mt-1 p-2 w-full border rounded-md">
                 </div>
@@ -64,7 +64,7 @@
             <form id="payment-form" class="mt-4" method="post" action="{% url 'checkout' %}">
                 {% csrf_token %}
                 <div class="mb-4 felx felx-col justify-between block mt-2 p-4 bg-white rounded-xl" >
-                    <label for="address" class="block text-sm font-medium text-gray-700">Dirección de entrega:</label>
+                    <label for="address" class="block text-sm font-medium text-gray-700">Dirección de domicilio:</label>
                     <input type="text" name="address" id="address" placeholder="Ingresa tu dirección" required
                         class="mt-1 p-2 w-full border rounded-md">
                 </div>

@@ -1,6 +1,6 @@
 from django.db import models
 from custom_user.models import User
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Category(models.Model):
@@ -36,4 +36,13 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Opinion(models.Model):
 
+    valoracion=models.IntegerField(default=0,validators=[MinValueValidator(0, message="La valoración no puede ser negativa"), MaxValueValidator(5, message="La valoración no puede ser mayor que 5")])
+    description=models.TextField(blank=True,null=True)
+    product = models.ForeignKey(Product, related_name='opinions', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='opinions', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.description

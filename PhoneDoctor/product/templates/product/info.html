@@ -44,6 +44,18 @@
                             
                         </div>
                         </p>
+                        <p class="text-xl font-bold mb-2">Opiniones: </p>
+                        {% if no_opiniones %}
+                            <p class="text-xl mb-2 ml-2">Este artículo no tiene opiniones</p>
+                        {% else %}
+                            {% for opinion in opiniones %}
+                                <div class="border p-4 rounded-md bg-white">
+                                    <p class="text-lg font-bold">Valoración: {{ opinion.valoracion }}/5</p>
+                                    <p class="text-gray-600">{{ opinion.description }}</p>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        
                         <form id="miFormulario" action="{% url 'add_to_cart' product.id %}" method="GET">
                             <input type="number" name="cantidad" id="cantidad" min="0" required>
                             <button type="submit" class="bg-transparent text-black px-4 py-1 focus:outline-none">

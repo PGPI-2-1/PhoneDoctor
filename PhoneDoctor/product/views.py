@@ -2,14 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.template import loader
-from .models import Product
+from .models import Product, Opinion
 from django.urls import reverse
 from shoppingCart.models import CartItem
 from core.views import calcular_total
+from order.models import Order
 
 
-# Create your views here.
-from .forms import NewProductForm, EditProductForm, NewBrandForm,NewCategoryForm
+from .forms import NewProductForm, EditProductForm, NewBrandForm,NewCategoryForm, NewOpinionForm
 
 
 @login_required
@@ -127,6 +127,10 @@ def product_info(request, pk):
         if 'cantidad_superada' in request.session:
             mensaje_cantidad=request.session.pop('cantidad_superada',None)
         total = calcular_total(shoppingCarts)
+
+        opiniones = Opinion.objects.filter(product=product)
+        no_opiniones = not opiniones.exists()
+
     except Product.DoesNotExist:
         return render(request, 'product/404.html', {})
 
@@ -136,4 +140,47 @@ def product_info(request, pk):
         'precio_total':total,
         'mensaje':mensaje,
         'mensaje_cantidad':mensaje_cantidad,
+        'opiniones':opiniones,
+        'no_opiniones': no_opiniones,
     })
+
+def nueva_opinion(request, product_id):
+    if not request.user.is_authenticated:
+        template = loader.get_template('opinion/403.html')
+        return HttpResponseForbidden(template.render({}, request))
+    
+    product=get_object_or_404(Product, id=product_id)
+    user = request.user
+    orders_by_user = Order.objects.filter(user=user)
+    products_by_user=[]
+    for order in orders_by_user:
+        for item in order.items.all():
+            products_by_user.append(item.product.id)
+
+    if not product_id in products_by_user:
+        template = loader.get_template('opinion/403.html')
+        return HttpResponseForbidden(template.render({}, request))
+        
+    existing_opinion = Opinion.objects.filter(product=product, user=user)
+    if existing_opinion:
+        template = loader.get_template('opinion/existing_opinion.html')
+        return HttpResponseForbidden(template.render({}, request))
+    else:
+        if request.method == 'POST':
+            form = NewOpinionForm(request.POST, request.FILES)
+
+            if form.is_valid():
+                print("holaquetal")
+                opinion=form.save(commit=False)
+                opinion.product=product
+                opinion.user=user
+                opinion.save()
+
+                return redirect('/product/'+str(product_id))
+        else:
+            form = NewOpinionForm()
+
+        return render(request, 'opinion/form.html', {
+            'form': form,
+            'title': 'Nueva Opinion',
+        })
