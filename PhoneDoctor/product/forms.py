@@ -11,7 +11,11 @@ class NewBrandForm(forms.ModelForm):
             'name': forms.TextInput(attrs={
                 'class': INPUT_CLASSES
             }),
-         }
+        }
+
+        labels = {
+            'name': 'Nombre:',
+        }
 
 class NewCategoryForm(forms.ModelForm):
      class Meta:
@@ -21,7 +25,10 @@ class NewCategoryForm(forms.ModelForm):
             'name': forms.TextInput(attrs={
                 'class': INPUT_CLASSES
             }),
-         }
+        }
+        labels = {
+            'name': 'Nombre:',
+        }
               
 class NewProductForm(forms.ModelForm):
     class Meta:
@@ -52,6 +59,16 @@ class NewProductForm(forms.ModelForm):
             }),
         }
 
+        labels = {
+            'brand': 'Marca:',
+            'category': 'Categoría:',
+            'name': 'Nombre:',
+            'description': 'Descripción:',
+            'price': 'Precio:',
+            'image': 'Imagen:',
+            'quantity': 'Cantidad:',
+        }
+
 class EditProductForm(forms.ModelForm):
     class Meta:
         model = Product
@@ -79,4 +96,14 @@ class EditProductForm(forms.ModelForm):
             'quantity': forms.NumberInput(attrs={
                 'class': INPUT_CLASSES
             }),
+        }
+
+        labels = {
+            'brand': 'Marca:',
+            'category': 'Categoría:',
+            'name': 'Nombre:',
+            'description': 'Descripción:',
+            'price': 'Precio:',
+            'image': 'Imagen:',
+            'quantity': 'Cantidad:',
         }
